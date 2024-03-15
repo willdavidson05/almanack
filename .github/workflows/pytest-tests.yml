@@ -1,0 +1,19 @@
+# used for running pytest tests
+name: pytest tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  pytest_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install python env
+        uses: ./.github/actions/install-python-env
+      - name: Run pytest
+        run: |
+          poetry run pytest
