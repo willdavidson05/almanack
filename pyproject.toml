@@ -16,6 +16,7 @@ pytest = "^8.1.1"
 cffconvert = "^2.0.0"
 linkchecker = "^10.4.0"
 vale = "^3.3.1.0"
+pyppeteer = "^2.0.0"
 
 [tool.isort]
 profile = "black"
@@ -28,6 +29,10 @@ exclude_dirs = ["tests"]
 # builds the jupyter book related to this project
 build-book.shell = """
   jupyter-book build src/almanac
+"""
+# build a PDF from the HTML content
+build-book-pdf.shell = """
+  jupyter-book build src/almanac --builder pdfhtml
 """
 # builds the jupyter book related to this project and opens a new browser window
 build-book-dev.shell = """
