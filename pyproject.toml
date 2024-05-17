@@ -9,6 +9,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 jupyter-book = "^1.0.0"
+docutils = "0.17.1"
+sphinxcontrib-bibtex = "^2.6.2"
 
 [tool.poetry.group.dev.dependencies]
 poethepoet = "^0.25.0"
@@ -23,6 +25,12 @@ profile = "black"
 
 [tool.bandit]
 exclude_dirs = ["tests"]
+
+[tool.codespell]
+ignore-words="styles/config/vocabularies/almanac/accept.txt"
+# add capabilities for inline ignore for codespell linting
+# referenced from: https://github.com/codespell-project/codespell/issues/1212
+ignore-regex=".{1024}|.*codespell-ignore.*"
 
 # defines poe the poet tasks
 [tool.poe.tasks]
