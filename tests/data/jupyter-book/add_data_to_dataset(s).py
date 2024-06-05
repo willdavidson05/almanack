@@ -1,16 +1,26 @@
 from zipfile import ZipFile
 
+# Name of zip contaitng .md files
 filename = "test_data.zip"
+
+# List of .md files
 md_filenames = ["high_entropy.md","low_entropy.md"]
-# Add desired data
+
+# Content to add to .md files
 data_to_add = "\n## New Section\n Adding in desired content to markdown file"
 
 def update_md_files(zip_path,md_files,data):
     '''
-    Updating Specified markdown files in the zip.
+    Function to update specified markdown files in the zip archive.
+    
+    Args:
+        - zip_path (str): Path to the zip file.
+        - md_files (list): List of markdown file names to be updated.
+        - data (str): Content to be added to the markdown files.
     '''
     with ZipFile(zip_path,'w') as zip:
         for i in md_files:
+            # open the markdown file in the zip and write the new data 
             with zip.open(i,'w') as md_file:
                 md_file.write(data.encode())
 
