@@ -1,12 +1,12 @@
 def add_entropy_to_file(file_path, lines_of_code):
     """
     Adds lines of code to the specified file.
-    
+
     Args:
         file_path: Path to the .md file.
         lines_of_code: List of lines of code to add.
     """
-    with open(file_path, 'w') as f:
+    with open(file_path, "w") as f:
         for i in lines_of_code:
             f.write(i + "\n")
 
@@ -32,8 +32,8 @@ high_entropy_code = [
     "    length = len(data)",
     "    return -sum(frequency / length * math.log(frequency / length, 2) for frequency in count.values())",
     "",
-    "print(entropy(\"Random Data 1234!\"))",
-    "```"
+    'print(entropy("Random Data 1234!"))',
+    "```",
 ]
 low_entropy_code = [
     "## Simple List",
@@ -41,16 +41,15 @@ low_entropy_code = [
     "- Item 2",
     "- Item 3",
     "- Item 4",
-    "- Item 5"
+    "- Item 5",
 ]
 
 # Dictionary of entropy levels for each file
 entropy_levels = {
     "high_entropy/high_entropy.md": high_entropy_code,
-    "low_entropy/low_entropy.md": low_entropy_code
+    "low_entropy/low_entropy.md": low_entropy_code,
 }
 
 # Add entropy to each file
 for file_path, lines_of_code in entropy_levels.items():
     add_entropy_to_file(file_path, lines_of_code)
-
