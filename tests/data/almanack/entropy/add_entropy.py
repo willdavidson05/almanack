@@ -1,5 +1,6 @@
 # add_entropy.py
 
+
 def add_entropy():
     def add_entropy_to_file(file_path, lines_of_code):
         """
@@ -55,6 +56,7 @@ def add_entropy():
     # Add entropy to each file
     for file_path, lines_of_code in entropy_levels.items():
         add_entropy_to_file(file_path, lines_of_code)
+
 
 if __name__ == "__main__":
     add_entropy()

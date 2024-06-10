@@ -9,9 +9,11 @@ Assumptions:
 References:
 - The 'add_entropy.py' script defines the specific content changes for entropy introduction.
 """
+
 import os
 import subprocess
 import zipfile
+
 # from entropy import add_entropy
 
 # Initialize git repository, and add baseline code
@@ -34,6 +36,7 @@ exec(open("add_entropy.py").read())
 subprocess.run(["git", "add"] + md_files)
 subprocess.run(["git", "commit", "-m", "Add entropy to Markdown files"])
 
+
 def zip_md_files(file_paths, output_zip_path):
     """
     Create a zip file containing multiple markdown files.
@@ -46,7 +49,7 @@ def zip_md_files(file_paths, output_zip_path):
         for file_path in file_paths:
             zipf.write(file_path, os.path.basename(file_path))
 
+
 # Zip the high_entropy and low_entropy folders separately
 zip_md_files(["high_entropy/high_entropy.md"], "high_entropy.zip")
 zip_md_files(["low_entropy/low_entropy.md"], "low_entropy.zip")
-
