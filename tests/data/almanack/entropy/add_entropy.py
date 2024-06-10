@@ -1,4 +1,5 @@
 # add_entropy.py
+# add docstring
 
 
 def add_entropy():
@@ -12,7 +13,7 @@ def add_entropy():
         """
         with open(file_path, "w") as f:
             for i in lines_of_code:
-                f.write(i + "\n")
+                f.write(i)
 
     # Define the lines of code for each file
     high_entropy_code = """
