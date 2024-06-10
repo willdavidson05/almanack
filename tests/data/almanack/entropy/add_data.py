@@ -12,7 +12,7 @@ References:
 import os
 import subprocess
 import zipfile
-from add_entropy import add_entropy
+# from entropy import add_entropy
 
 # Initialize git repository, and add baseline code
 subprocess.run(["git", "init"], check=True)
@@ -30,7 +30,7 @@ subprocess.run(["git", "add"] + md_files)
 subprocess.run(["git", "commit", "-m", "Initial commit with baseline content"])
 
 # Running the add_entropy.py script
-add_entropy()
+exec(open("add_entropy.py").read())
 subprocess.run(["git", "add"] + md_files)
 subprocess.run(["git", "commit", "-m", "Add entropy to Markdown files"])
 
@@ -49,3 +49,4 @@ def zip_md_files(file_paths, output_zip_path):
 # Zip the high_entropy and low_entropy folders separately
 zip_md_files(["high_entropy/high_entropy.md"], "high_entropy.zip")
 zip_md_files(["low_entropy/low_entropy.md"], "low_entropy.zip")
+
