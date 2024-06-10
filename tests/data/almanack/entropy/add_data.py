@@ -9,47 +9,34 @@ Assumptions:
 References:
 - The 'add_entropy.py' script defines the specific content changes for entropy introduction.
 """
-
 import os
 import subprocess
 import zipfile
 
-# from entropy import add_entropy
-
-# Initialize git repository, and add baseline code
+# Initialize git repository and add baseline content
 subprocess.run(["git", "init"], check=True)
 baseline_text = "Baseline content\n"
 md_files = ["high_entropy/high_entropy.md", "low_entropy/low_entropy.md"]
 
-os.makedirs("high_entropy", exist_ok=True)
-os.makedirs("low_entropy", exist_ok=True)
-
-# Adding baseline content to each Markdown file
-for i in md_files:
-    with open(i, "w") as f:
+for md_file in md_files:
+    os.makedirs(os.path.dirname(md_file), exist_ok=True)
+    with open(md_file, "w") as f:
         f.write(baseline_text)
-subprocess.run(["git", "add"] + md_files)
-subprocess.run(["git", "commit", "-m", "Initial commit with baseline content"])
 
 # Running the add_entropy.py script
 exec(open("add_entropy.py").read())
-subprocess.run(["git", "add"] + md_files)
-subprocess.run(["git", "commit", "-m", "Add entropy to Markdown files"])
 
+# Ensure that .git folders are present
+subprocess.run(["git", "init", "high_entropy"], check=True)
+subprocess.run(["git", "init", "low_entropy"], check=True)
 
-def zip_md_files(file_paths, output_zip_path):
-    """
-    Create a zip file containing multiple markdown files.
-
-    Args:
-        file_paths: List of paths to the markdown files.
-        output_zip_path: Path to the output zip file.
-    """
+# Zip the .git folders
+def zip_git_folder(folder_path, output_zip_path):
     with zipfile.ZipFile(output_zip_path, "w") as zipf:
-        for file_path in file_paths:
-            zipf.write(file_path, os.path.basename(file_path))
+        for root, dirs, files in os.walk(folder_path):
+            for file in files:
+                zipf.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), folder_path))
 
-
-# Zip the high_entropy and low_entropy folders separately
-zip_md_files(["high_entropy/high_entropy.md"], "high_entropy.zip")
-zip_md_files(["low_entropy/low_entropy.md"], "low_entropy.zip")
+# Zip the .git folders separately
+zip_git_folder("high_entropy/.git", "high_entropy_git.zip")
+zip_git_folder("low_entropy/.git", "low_entropy_git.zip")
