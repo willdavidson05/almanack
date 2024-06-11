@@ -1,5 +1,10 @@
-# add_entropy.py
-# add docstring
+"""
+This script introduces entropy to Markdown files by adding predefined lines of code.
+
+Functions:
+- `add_entropy_to_file(file_path, lines_of_code)`: Writes the specified lines to the given file.
+- `add_entropy()`: Applies `add_entropy_to_file` to each entry in `entropy_levels`.
+"""
 
 
 def add_entropy_to_file(file_path, lines_of_code):
@@ -13,6 +18,7 @@ def add_entropy_to_file(file_path, lines_of_code):
     with open(file_path, "w") as f:
         for i in lines_of_code:
             f.write(i)
+
 
 # Define the lines of code for each file
 high_entropy_code = """
@@ -31,9 +37,14 @@ high_entropy_code = """
         def entropy(data):
             from collections import Counter
             import math
+
             count = Counter(data)
             length = len(data)
-            return -sum(frequency / length * math.log(frequency / length, 2) for frequency in count.values())
+            return -sum(
+                frequency / length * math.log(frequency / length, 2)
+                for frequency in count.values()
+            )
+
 
         print(entropy("Random Data 1234!"))
         ```
@@ -54,10 +65,12 @@ entropy_levels = {
     "low_entropy/low_entropy.md": low_entropy_code,
 }
 
+
 def add_entropy():
     # Add entropy to each file
     for file_path, lines_of_code in entropy_levels.items():
         add_entropy_to_file(file_path, lines_of_code)
+
 
 if __name__ == "__main__":
     add_entropy()
