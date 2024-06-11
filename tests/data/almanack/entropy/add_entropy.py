@@ -33,21 +33,6 @@ high_entropy_code = """
         2. The quick brown fox jumps over 13 lazy dogs.
         3. Supercalifragilisticexpialidocious - a word with magic.
         ### Subsection: Mixed Content
-        ```python
-        def entropy(data):
-            from collections import Counter
-            import math
-
-            count = Counter(data)
-            length = len(data)
-            return -sum(
-                frequency / length * math.log(frequency / length, 2)
-                for frequency in count.values()
-            )
-
-
-        print(entropy("Random Data 1234!"))
-        ```
     """
 
 low_entropy_code = """
