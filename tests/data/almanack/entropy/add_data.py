@@ -12,6 +12,8 @@ References:
 import os
 import subprocess
 import zipfile
+from add_entropy import add_entropy
+
 
 # Initialize git repository and add baseline content
 subprocess.run(["git", "init"], check=True)
