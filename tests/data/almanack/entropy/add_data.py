@@ -26,7 +26,7 @@ for md_file in md_files:
         f.write(baseline_text)
 
 # Running the add_entropy.py script
-exec(open("add_entropy.py").read())
+add_entropy()
 
 # Ensure that .git folders are present
 subprocess.run(["git", "init", "high_entropy"], check=True)
