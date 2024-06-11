@@ -18,6 +18,7 @@ Command-Line Instructions:
 import os
 import subprocess
 import zipfile
+import pathlib
 
 from add_entropy import add_entropy
 
@@ -44,7 +45,7 @@ def main():
     md_files = ["high_entropy/high_entropy.md", "low_entropy/low_entropy.md"]
 
     for md_file in md_files:
-        os.makedirs(os.path.dirname(md_file), exist_ok=True)
+        pathlib.Path(md_file).parent.mkdir(parents=True, exist_ok=True)
         with open(md_file, "w") as f:
             f.write(baseline_text)
 
@@ -52,8 +53,8 @@ def main():
     add_entropy()
 
     # Ensure that .git folders are present
-    subprocess.run(["git", "init", "high_entropy"], check=True)
-    subprocess.run(["git", "init", "low_entropy"], check=True)
+    (pathlib.Path("high_entropy") / ".git").mkdir(exist_ok=True)
+    (pathlib.Path("low_entropy") / ".git").mkdir(exist_ok=True)
 
     # Zip the .git folders separately
     zip_git_folder("high_entropy/.git", "high_entropy_git.zip")
