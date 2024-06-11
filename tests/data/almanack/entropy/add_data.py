@@ -16,9 +16,9 @@ Command-Line Instructions:
 """
 
 import os
+import pathlib
 import subprocess
 import zipfile
-import pathlib
 
 from add_entropy import add_entropy
 
