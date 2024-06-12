@@ -7,13 +7,13 @@ Functions:
 """
 
 
-def add_entropy_to_file(file_path, lines_of_code):
+def add_entropy_to_file(file_path: str, lines_of_code: str):
     """
     Adds lines of code to the specified file.
 
     Args:
-        file_path: Path to the .md file.
-        lines_of_code: List of lines of code to add.
+        file_path (str): Path to the .md file.
+        lines_of_code (str): List of lines of code to add.
     """
     with open(file_path, "w") as f:
         for i in lines_of_code:

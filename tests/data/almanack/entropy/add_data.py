@@ -26,7 +26,7 @@ from pathlib import Path
 from add_entropy import add_entropy
 
 
-def zip_git_folder(folder_path, output_zip_path):
+def zip_git_folder(folder_path: str, output_zip_path: str):
     """
     Creates a zip file containing the contents of a folder.
 
@@ -43,7 +43,7 @@ def zip_git_folder(folder_path, output_zip_path):
                 zipf.write(file_path, file_path.relative_to(folder_path))
 
 
-def commit_changes(directory, message):
+def commit_changes(directory: str, message: str):
     """
     Commits changes in the specified Git directory with a given commit message.
 
