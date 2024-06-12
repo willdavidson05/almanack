@@ -38,27 +38,43 @@ def zip_git_folder(folder_path, output_zip_path):
                 zipf.write(file_path, os.path.relpath(file_path, folder_path))
 
 
+def commit_changes(directory, message):
+    """
+    Commits changes in the specified Git directory with a given commit message.
+
+    Args:
+        directory (str): The directory containing the Git repository.
+        message (str): The commit message.
+    """
+    subprocess.run(["git", "add", "."], check=True, cwd=directory)
+    subprocess.run(["git", "commit", "-m", message], check=True, cwd=directory)
+
+
 def main():
-    # Initialize git repository and add baseline content
-    subprocess.run(["git", "init"], check=True)
+    # Create directories for high_entropy and low_entropy
+    for dir_name in ["high_entropy", "low_entropy"]:
+        pathlib.Path(dir_name).mkdir(parents=True, exist_ok=True)
+        subprocess.run(["git", "init"], check=True, cwd=dir_name)
+
+    # Add baseline content to Markdown files and commit
     baseline_text = "Baseline content\n"
     md_files = ["high_entropy/high_entropy.md", "low_entropy/low_entropy.md"]
-
     for md_file in md_files:
-        pathlib.Path(md_file).parent.mkdir(parents=True, exist_ok=True)
         with open(md_file, "w") as f:
             f.write(baseline_text)
+        directory = os.path.dirname(md_file)
+        commit_changes(directory, "Initial commit with baseline content")
 
     # Run the add_entropy.py script
     add_entropy()
 
-    # Ensure that .git folders are present
-    (pathlib.Path("high_entropy") / ".git").mkdir(exist_ok=True)
-    (pathlib.Path("low_entropy") / ".git").mkdir(exist_ok=True)
+    # Commit changes after adding entropy
+    for dir_name in ["high_entropy", "low_entropy"]:
+        commit_changes(dir_name, "Commit with added entropy")
 
-    # Zip the .git folders separately
-    zip_git_folder("high_entropy/.git", "high_entropy_git.zip")
-    zip_git_folder("low_entropy/.git", "low_entropy_git.zip")
+    # Ensure that .git folders are present and zip them
+    for dir_name in ["high_entropy", "low_entropy"]:
+        zip_git_folder(f"{dir_name}/.git", f"{dir_name}_git.zip")
 
 
 if __name__ == "__main__":
