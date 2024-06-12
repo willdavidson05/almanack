@@ -10,15 +10,18 @@ References:
 - The 'add_entropy.py' script defines the specific content changes for entropy introduction.
 
 Command-Line Instructions:
+- To invoke this script within the development environment, use the following command:
+  poetry run python add_data.py
+
 - To unzip the created zip files and view the contents, use the following commands:
   unzip high_entropy_git.zip -d high_entropy_unzipped
   unzip low_entropy_git.zip -d low_entropy_unzipped
 """
 
-import os
 import pathlib
 import subprocess
 import zipfile
+from pathlib import Path
 
 from add_entropy import add_entropy
 
@@ -31,11 +34,13 @@ def zip_git_folder(folder_path, output_zip_path):
         folder_path (str): The path to the folder to be zipped.
         output_zip_path (str): The path to the output zip file.
     """
+    folder_path = Path(folder_path)
+    output_zip_path = Path(output_zip_path)
+
     with zipfile.ZipFile(output_zip_path, "w") as zipf:
-        for root, _, files in os.walk(folder_path):
-            for file in files:
-                file_path = os.path.join(root, file)
-                zipf.write(file_path, os.path.relpath(file_path, folder_path))
+        for file_path in folder_path.glob("**/*"):
+            if file_path.is_file():
+                zipf.write(file_path, file_path.relative_to(folder_path))
 
 
 def commit_changes(directory, message):
@@ -62,7 +67,7 @@ def main():
     for md_file in md_files:
         with open(md_file, "w") as f:
             f.write(baseline_text)
-        directory = os.path.dirname(md_file)
+        directory = Path(md_file).parent
         commit_changes(directory, "Initial commit with baseline content")
 
     # Run the add_entropy.py script
