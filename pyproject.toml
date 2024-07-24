@@ -15,22 +15,33 @@ exclude = ["src/book/_build"]
 [tool.poetry.dependencies]
 python = ">=3.9,<=3.12"
 pyyaml = "^6.0.1"
-
+gitpython = "^3.1.43"
+pygit2 = "^1.15.1"
 
 [tool.poetry.group.book.dependencies]
 jupyter-book = "^1.0.0"
 docutils = "0.17.1"
 sphinxcontrib-bibtex = "^2.6.2"
+pandas = "^2.2.2"
+pyarrow = "^16.0.0"
+jupyterlab = "^4.2.3"
+plotly = "^5.22.0"
 
 [tool.poetry.group.dev.dependencies]
 poethepoet = "^0.25.0"
 pytest = "^8.1.1"
-cffconvert = "^2.0.0"
 linkchecker = "^10.4.0"
 vale = "^3.3.1.0"
 pyppeteer = "^2.0.0"
-gitpython = "^3.1.43"
 coverage = "^7.5.3"
+biopython = "^1.84"
+black = "^24.4.2"
+isort = "^5.13.2"
+jupyterlab-code-formatter = "^2.2.1"
+requests = "^2.32.3"
+kaleido = "0.2.1"
+pygithub = "^2.3.0"
+jupyterlab-spellchecker = "^0.8.4"
 
 [tool.isort]
 profile = "black"
@@ -68,7 +79,7 @@ select = [
 [tool.poe.tasks]
 # builds the jupyter book related to this project
 build-book.shell = """
-  jupyter-book build src/book
+  jupyter-book build src/book --all
 """
 # build a PDF from the HTML content
 build-book-pdf.shell = """
