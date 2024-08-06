@@ -2,9 +2,9 @@ name: entropy-check
 
 on:
   push:
-    branches: [main] # edit for my fork
+    branches: [main-GitHub-Action] # edit for my fork
   pull_request:
-    branches: [main]
+    branches: [main-GitHub-Action]
 
 jobs:
   entropy-report:
