@@ -4,10 +4,12 @@ name: entropy-check
 on:
   push:
     branches:
-      - main-GitHub-Action
+      - main
+      - GitHub-Action
   pull_request:
     branches:
-      - main-GitHub-Action
+      - main
+      - GitHub-Action
 
 jobs:
   entropy-report:
