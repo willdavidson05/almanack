@@ -1,8 +1,11 @@
 # __init__.py for software gardening almanack python package
 
 from .book import read
-from .entropy import aggregate_entropy_calculation, calculate_normalized_entropy
-from .repo_helper import process_repository
+from .processing.calculate_entropy import (
+    calculate_aggregate_entropy,
+    calculate_normalized_entropy,
+)
+from .processing.processing_repositories import process_repo_for_analysis
 
 # note: version placeholder is updated during build
 # by poetry-dynamic-versioning.

@@ -1,12 +1,12 @@
 """
-This module calculates the amount of Software entropy
+This module calculates the amount of Software information entropy
 """
 
 import math
 import pathlib
 from typing import List
 
-from .git_parser import calculate_loc_changes
+from .git_operations import get_loc_changed
 
 
 def calculate_normalized_entropy(
@@ -36,9 +36,7 @@ def calculate_normalized_entropy(
         changes, helping identify potentially unstable code areas.
 
     """
-    loc_changes = calculate_loc_changes(
-        repo_path, source_commit, target_commit, file_names
-    )
+    loc_changes = get_loc_changed(repo_path, source_commit, target_commit, file_names)
     # Calculate total lines of code changes across all specified files
     total_changes = sum(loc_changes.values())
 
@@ -58,11 +56,10 @@ def calculate_normalized_entropy(
         )
         for file_name in loc_changes  # Iterate over each file in loc_changes dictionary
     }
-
     return entropy_calculation
 
 
-def aggregate_entropy_calculation(
+def calculate_aggregate_entropy(
     repo_path: pathlib.Path,
     source_commit: str,
     target_commit: str,
@@ -89,8 +86,9 @@ def aggregate_entropy_calculation(
     # Calculate total entropy of the repository
     total_entropy = sum(entropy_calculation.values())
 
-    # Normalize total entropy to range [0, 1]
-    max_entropy = len(entropy_calculation) if len(entropy_calculation) > 0 else 1
-    normalized_total_entropy = total_entropy / max_entropy
-
+    # Normalize total entropy by the number of files edited between the two commits
+    num_files = len(file_names)
+    normalized_total_entropy = (
+        total_entropy / num_files if num_files > 0 else 0.0
+    )  # Avoid division by zero (e.g., num_files = 0) and ensure valid entropy calculation
     return normalized_total_entropy

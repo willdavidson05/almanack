@@ -1,12 +1,15 @@
 """
-Testing entropy.py functionality
+Testing entropy functionality
 """
 
 import pathlib
 
-from test_git_parser import get_most_recent_commits
+from test_git_operations import get_most_recent_commits
 
-from almanack.entropy import aggregate_entropy_calculation, calculate_normalized_entropy
+from almanack.processing.calculate_entropy import (
+    calculate_aggregate_entropy,
+    calculate_normalized_entropy,
+)
 
 
 def test_calculate_normalized_entropy(
@@ -32,11 +35,11 @@ def test_calculate_normalized_entropy(
             )  # Check if entropy is non-negative and within normalized range of [0,1]
 
 
-def test_aggregate_entropy_different_repos(
+def test_calculate_aggregate_entropy(
     repository_paths: dict[str, pathlib.Path], repo_file_sets: dict[str, list[str]]
 ) -> None:
     """
-    Test that aggregate_entropy_calculation function
+    Test that calculate_aggregate_entropy function
     """
     repo_entropies = {}
 
@@ -44,7 +47,7 @@ def test_aggregate_entropy_different_repos(
         # Extract two most recent commits: source and target
         source_commit, target_commit = get_most_recent_commits(repo_path)
         # Call calculate_normalized_entropy function
-        normalized_entropy = aggregate_entropy_calculation(
+        normalized_entropy = calculate_aggregate_entropy(
             repo_path, source_commit, target_commit, repo_file_sets[label]
         )
         repo_entropies[label] = normalized_entropy
