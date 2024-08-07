@@ -20,23 +20,13 @@ jobs:
       with:
         fetch-depth: 0
 
-    # - name: Install Poetry
-    #   run: curl -sSL https://install.python-poetry.org | python3 -
+    - name: Install Poetry
+      run: curl -sSL https://install.python-poetry.org | python3 -
 
     # - name: Install dependencies
     #   run: poetry install
     - name: Install python env
       uses: ./.github/actions/install-python-env
-    
-    - name: Check Python version
-      run: python --version
-
-    - name: Check Poetry version
-      run: poetry --version
-
-    - name: List installed packages
-      run: poetry show
-
 
     - name: Process repository entropy
       run: poetry run almanack process_repo_entropy . > entropy_report
