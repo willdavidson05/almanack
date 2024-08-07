@@ -54,4 +54,3 @@ def test_calculate_aggregate_entropy(
 
     # Ensure that repositories with different entropy levels have different aggregated scores
     assert repo_entropies["3_file_repo"] > repo_entropies["1_file_repo"]
-
