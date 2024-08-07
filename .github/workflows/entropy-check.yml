@@ -1,42 +1,45 @@
----
-name: entropy-check
+name: Process Repository Entropy
 
 on:
   push:
     branches:
       - main
-      - GitHub-Action
   pull_request:
     branches:
       - main
-      - GitHub-Action
+
 jobs:
-  entropy-report:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      
-      - name: Install python env
-        uses: ./.github/actions/install-python-env
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
 
-      - name: Display working directory
-        run: pwd
-      
-      - name: List directory contents
-        run: ls -la
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.10
 
-      - name: Show git log
-        run: git log --oneline
+    - name: Install Poetry
+      run: curl -sSL https://install.python-poetry.org | python3 -
 
-      - name: Run entropy report
-        run: |
-          poetry run almanack process_repo_entropy . > entropy_report
-          cat entropy_report
-          
-      - name: Show detailed git log
-        run: git log --stat
+    - name: Install dependencies
+      run: poetry install
 
-      - name: Show file changes
-        run: git diff --name-only HEAD~1 HEAD
-      
+    - name: Show commit history
+      run: git log --oneline
+
+    - name: Show detailed commit info
+      run: git log --stat
+
+    - name: Check git diff
+      run: git diff HEAD~1 HEAD --stat
+
+    - name: Process repository entropy
+      run: poetry run almanack process_repo_entropy . > entropy_report
+
+    - name: Display entropy report
+      run: cat entropy_report
