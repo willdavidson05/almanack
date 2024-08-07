@@ -15,19 +15,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Install Poetry
-      run: curl -sSL https://install.python-poetry.org | python3 -
+      - name: Install Poetry
+        run: curl -sSL https://install.python-poetry.org | python3 -
 
-    - name: Install dependencies
-      run: poetry install
+      - name: Install dependencies
+        run: poetry install
 
-    # - name: Install python env
-    #   uses: ./.github/actions/install-python-env
+      # - name: Install python env
+      #   uses: ./.github/actions/install-python-env
 
-    - name: Process repository entropy
-      run: poetry run almanack process_repo_entropy .
+      - name: Process repository entropy
+        run: poetry run almanack process_repo_entropy .
