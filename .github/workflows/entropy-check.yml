@@ -31,4 +31,12 @@ jobs:
 
       - name: Run entropy report
         run: |
-          poetry run almanack process_repo_entropy .
+          poetry run almanack process_repo_entropy . > entropy_report
+          cat entropy_report
+          
+      - name: Show detailed git log
+        run: git log --stat
+
+      - name: Show file changes
+        run: git diff --name-only HEAD~1 HEAD
+      
