@@ -17,23 +17,14 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+      # with:
+      #   fetch-depth: 0
 
     - name: Install Poetry
       run: curl -sSL https://install.python-poetry.org | python3 -
 
     - name: Install dependencies
       run: poetry install
-
-    - name: Show commit history
-      run: git log --oneline
-
-    - name: Show detailed commit info
-      run: git log --stat
-
-    - name: Check git diff
-      run: git diff HEAD~1 HEAD --stat
 
     - name: Process repository entropy
       run: poetry run almanack process_repo_entropy . > entropy_report
