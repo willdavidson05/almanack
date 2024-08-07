@@ -1,3 +1,4 @@
+---
 name: entropy-check
 
 on:
@@ -9,7 +10,6 @@ on:
     branches:
       - main
       - GitHub-Action
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,34 +18,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
       with:
-        fetch-depth: 0  # Fetch the entire git history to ensure full commit data
+        fetch-depth: 0
 
     - name: Install Poetry
-      run: curl -sSL https://install.python-poetry.org | python3 -  # Install Poetry for dependency management
+      run: curl -sSL https://install.python-poetry.org | python3 -
 
     - name: Install dependencies
-      run: poetry install  # Install all dependencies specified in pyproject.toml
+      run: poetry install
+
+    # - name: Install python env
+    #   uses: ./.github/actions/install-python-env
 
     - name: Process repository entropy
-      run: |
-        poetry run almanack process_repo_entropy . > entropy_report.txt  # Save report to a file
-
-    - name: Upload entropy report
-      uses: actions/upload-artifact@v3
-      with:
-        name: entropy-report
-        path: entropy_report.txt
-
-    - name: Post PR comment with entropy report
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use the GitHub token to authenticate
-      run: |
-        # Get the PR number from the environment
-        PR_NUMBER=$(echo $GITHUB_REF | sed 's/refs\/pull\/\([0-9]*\)\/merge/\1/')
-        # Read the report file
-        REPORT_CONTENT=$(cat entropy_report.txt)
-        # Post the comment to the PR
-        curl -H "Authorization: token $GITHUB_TOKEN" \
-             -X POST \
-             -d "{\"body\":\"## Entropy Report\\n\\n\`\`\`\\n$REPORT_CONTENT\\n\`\`\`\"}" \
-             "https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/comments"
+      run: poetry run almanack process_repo_entropy . 
