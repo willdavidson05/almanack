@@ -10,17 +10,25 @@ on:
     branches:
       - main
       - GitHub-Action
-
 jobs:
   entropy-report:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
       - name: Install python env
         uses: ./.github/actions/install-python-env
+
+      - name: Display working directory
+        run: pwd
+      
+      - name: List directory contents
+        run: ls -la
+
+      - name: Show git log
+        run: git log --oneline
+
       - name: Run entropy report
         run: |
-          poetry run almanack process_repo_entropy . > entropy_report.txt
-      - name: Display entropy report
-        run: |
-          cat entropy_report.txt
+          poetry run almanack process_repo_entropy .
