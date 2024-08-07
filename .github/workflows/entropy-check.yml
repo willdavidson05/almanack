@@ -20,4 +20,7 @@ jobs:
         uses: ./.github/actions/install-python-env
       - name: Run entropy report
         run: |
-          poetry run almanack process_repo_entropy .
+          poetry run almanack process_repo_entropy . > entropy_report.txt
+      - name: Display entropy report
+        run: |
+          cat entropy_report.txt
