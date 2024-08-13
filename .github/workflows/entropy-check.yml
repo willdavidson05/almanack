@@ -28,8 +28,8 @@ jobs:
       - name: Determine PR branches
         run: |
           {
-            echo "PR_BRANCH=${{ github.head_ref }}" >> $GITHUB_ENV
-            echo "MAIN_BRANCH=${{ github.base_ref }}" >> $GITHUB_ENV
+            echo "PR_BRANCH=${{ github.head_ref }}"
+            echo "MAIN_BRANCH=${{ github.base_ref }}" 
           } >> "$GITHUB_ENV"
 
       # Runs the entropy calculation script and saves the output to a file
