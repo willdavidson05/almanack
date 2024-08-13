@@ -72,10 +72,4 @@ def process_pr_entropy(repo_path: str, pr_branch: str, main_branch: str) -> str:
     # Generate and print the report
     report_content = pr_report(pr_data)
 
-    # Convert the dictionary to a JSON string
-    # json_string = json.dumps(pr_data)
-
     print(report_content)
-
-    # Return the JSON string and report content
-    # return json_string

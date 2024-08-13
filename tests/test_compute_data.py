@@ -7,7 +7,7 @@ import pathlib
 from almanack.processing.compute_data import compute_repo_data
 
 
-def test_generate_whole_repo_data(repository_paths: dict[str, pathlib.Path]) -> None:
+def test_generate_repo_data(repository_paths: dict[str, pathlib.Path]) -> None:
     """
     Testing generate_whole_repo_data produces the expected output for given repositories.
     """

@@ -67,13 +67,13 @@ Top 5 files with the most entropy:
 
 def pr_report(data: Dict[str, Any]) -> str:
     """
-    Returns the formatted PR-specific entropy report as a string.
+    Returns the formatted PR-specific entropy report.
 
     Args:
         data (Dict[str, Any]): Dictionary with the entropy data.
 
     Returns:
-        str: Formatted GitHub markdown PR report.
+        str: Formatted GitHub markdown.
     """
     title = "Pull Request Entropy Report"
 
