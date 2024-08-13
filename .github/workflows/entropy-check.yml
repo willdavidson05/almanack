@@ -8,7 +8,6 @@ on:
       - main
   workflow_dispatch:
 
-
 jobs:
   entropy-check:
     runs-on: ubuntu-latest
@@ -43,13 +42,11 @@ jobs:
       - name: Format Entropy Report
         id: format_report
         run: |
-          {
-            echo "REPORT_CONTENT<<EOF";
-            echo "\`\`\`";
-            cat entropy_report.txt;
-            echo "\`\`\`";
-            echo "EOF";
-          } >> "$GITHUB_ENV"
+          echo "REPORT_CONTENT<<EOF" >> $GITHUB_ENV
+          echo '```' >> $GITHUB_ENV
+          cat entropy_report.txt >> $GITHUB_ENV
+          echo '```' >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: PR comment
         uses: thollander/actions-comment-pull-request@v2
