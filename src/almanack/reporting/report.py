@@ -65,7 +65,6 @@ Top 5 files with the most entropy:
     return report_content
 
 
-
 def pr_report(data: Dict[str, Any]) -> str:
     """
     Returns the formatted PR-specific entropy report as a string.
@@ -86,9 +85,10 @@ def pr_report(data: Dict[str, Any]) -> str:
     entropy_data = data["entropy_per_file"]
     commits = data["commits"]
 
-    # Sort files by normalized entropy in descending order and get the top 5
-    sorted_entropy = sorted(entropy_data.items(), key=lambda item: item[1], reverse=True)
-    top_files = sorted_entropy[:5]
+    # Filter files with entropy above average
+    above_average_files = {
+        file_name: entropy for file_name, entropy in entropy_data.items() if entropy > total_entropy_introduced
+    }
 
     # Format the report
     pr_info = [
@@ -101,19 +101,19 @@ def pr_report(data: Dict[str, Any]) -> str:
 
     top_files_info = [
         [file_name, f"{entropy:.4f}"]
-        for file_name, entropy in top_files
+        for file_name, entropy in above_average_files.items()
     ]
 
     report_content = f"""
-{'=' * 80}
-{title:^80}
-{'=' * 80}
+{'=' * 50}
+{title:^50}
+{'=' * 50}
 
-Pull Request Comparison:
-{tabulate(pr_info, tablefmt="simple_grid")}
+Pull request comparison:
+{tabulate(pr_info, tablefmt="github")}
 
-Top 5 Files with Highest Entropy:
-{tabulate(top_files_info, headers=["File Name", "Entropy Introduced"], tablefmt="simple_grid")}
+Files with above average entropy:
+{tabulate(top_files_info, headers=["File Name", "Entropy Introduced"], tablefmt="github")}
 
 """
     return report_content
