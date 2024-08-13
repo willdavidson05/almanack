@@ -87,9 +87,10 @@ def pr_report(data: Dict[str, Any]) -> str:
 
     # Filter files with entropy above average
     above_average_files = {
-        file_name: entropy for file_name, entropy in entropy_data.items() if entropy > total_entropy_introduced
+        file_name: entropy
+        for file_name, entropy in entropy_data.items()
+        if entropy > total_entropy_introduced
     }
-
     # Format the report
     pr_info = [
         ["PR Branch", pr_branch],

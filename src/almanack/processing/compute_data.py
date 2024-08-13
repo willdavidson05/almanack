@@ -80,18 +80,17 @@ def compute_repo_data(repo_path: str) -> None:
         # If processing fails, return an error dictionary
         return {"repo_path": str(repo_path), "error": str(e)}
 
-import pathlib
-import pygit2
-from datetime import datetime, timezone
-from typing import Dict, Any
+
+from typing import Any, Dict
+
 
 def compute_pr_data(repo_path: str, pr_branch: str, main_branch: str) -> Dict[str, Any]:
     """
-    Computes entropy data for a pull request compared to the main branch.
+    Computes entropy data for a PR compared to the main branch.
 
     Args:
         repo_path (str): The local path to the Git repository.
-        pr_branch (str): The branch name for the pull request.
+        pr_branch (str): The branch name for the PR.
         main_branch (str): The branch name for the main branch.
 
     Returns:
@@ -116,7 +115,7 @@ def compute_pr_data(repo_path: str, pr_branch: str, main_branch: str) -> Dict[st
         pr_commit = repo.get(pr_ref.target)
         main_commit = repo.get(main_ref.target)
 
-        # Retrieve the list of files that have been edited between the two commits
+        # Get the list of files that have been edited between the two commits
         changed_files = get_edited_files(repo, main_commit, pr_commit)
 
         # Calculate the total entropy introduced by the PR
@@ -136,8 +135,16 @@ def compute_pr_data(repo_path: str, pr_branch: str, main_branch: str) -> Dict[st
         )
 
         # Convert commit times to UTC datetime objects, then format as date strings
-        pr_commit_date = datetime.fromtimestamp(pr_commit.commit_time, tz=timezone.utc).date().isoformat()
-        main_commit_date = datetime.fromtimestamp(main_commit.commit_time, tz=timezone.utc).date().isoformat()
+        pr_commit_date = (
+            datetime.fromtimestamp(pr_commit.commit_time, tz=timezone.utc)
+            .date()
+            .isoformat()
+        )
+        main_commit_date = (
+            datetime.fromtimestamp(main_commit.commit_time, tz=timezone.utc)
+            .date()
+            .isoformat()
+        )
 
         # Return the data structure
         return {
@@ -150,9 +157,8 @@ def compute_pr_data(repo_path: str, pr_branch: str, main_branch: str) -> Dict[st
         }
 
     except Exception as e:
-        # If processing fails, return an error dictionary
+        # If processing fails, return an informative error
         return {"pr_branch": pr_branch, "main_branch": main_branch, "error": str(e)}
-
 
 
 def process_repo_for_analysis(

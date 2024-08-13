@@ -25,9 +25,20 @@ jobs:
         with:
           fetch-depth: 0 # Ensure the action respects the desired fetch depth
 
+      # Determine the PR branches
+      - name: Determine PR branches
+        id: determine_branches
+        run: |
+          echo "PR_BRANCH=${{ github.head_ref }}" >> $GITHUB_ENV
+          echo "MAIN_BRANCH=${{ github.base_ref }}" >> $GITHUB_ENV
+
       # Runs the entropy calculation script and saves the output to a file
       - name: Process repository entropy
-        run: poetry run almanack process_repo_entropy . > entropy_report.txt
+        run: |
+          poetry run almanack process_pr_entropy \
+            --repo_path "." \
+            --pr_branch "${{ env.PR_BRANCH }}" \
+            --main_branch "${{ env.MAIN_BRANCH }}" > entropy_report.txt
 
       # Formats the entropy report and saves it to GitHub Actions env
       - name: Format Entropy Report

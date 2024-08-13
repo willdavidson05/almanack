@@ -4,13 +4,12 @@ This module procesess GitHub data
 
 import json
 import pathlib
-import pygit2 
 
-from almanack.processing.compute_data import compute_repo_data, compute_pr_data
-from almanack.reporting.report import repo_report, pr_report
+from almanack.processing.compute_data import compute_pr_data, compute_repo_data
+from almanack.reporting.report import pr_report, repo_report
 
 
-def process_repo_entropy(repo_path: str) -> None:
+def process_repo_entropy(repo_path: str) -> str:
     """
     Processes GitHub repository data to calculate a report.
 
@@ -45,22 +44,22 @@ def process_repo_entropy(repo_path: str) -> None:
     return json_string
 
 
-def process_pr_entropy(repo_path: str, pr_branch: str, main_branch: str) -> None:
+def process_pr_entropy(repo_path: str, pr_branch: str, main_branch: str) -> str:
     """
-    Processes GitHub pull request data to calculate a report comparing the PR branch with the main branch.
+    Processes GitHub PR data to calculate a report comparing the PR branch to the main branch.
 
     Args:
         repo_path (str): The local path to the Git repository.
-        pr_branch (str): The branch name for the pull request.
+        pr_branch (str): The branch name of the PR.
         main_branch (str): The branch name for the main branch.
 
     Returns:
-        str: A JSON string containing the PR data and entropy metrics.
+        str: A JSON string containing report data.
 
     Raises:
         FileNotFoundError: If the specified directory does not contain a valid Git repository.
     """
-    
+
     repo_path = pathlib.Path(repo_path)
 
     # Check if the directory contains a Git repository
@@ -70,13 +69,13 @@ def process_pr_entropy(repo_path: str, pr_branch: str, main_branch: str) -> None
     # Process the PR and get the dictionary
     pr_data = compute_pr_data(str(repo_path), pr_branch, main_branch)
 
-    # Generate and print the report from the dictionary
+    # Generate and print the report
     report_content = pr_report(pr_data)
 
     # Convert the dictionary to a JSON string
-    json_string = json.dumps(pr_data)
+    # json_string = json.dumps(pr_data)
 
     print(report_content)
 
     # Return the JSON string and report content
-    return json_string
+    # return json_string
