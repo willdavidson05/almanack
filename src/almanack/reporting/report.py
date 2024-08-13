@@ -63,3 +63,57 @@ Top 5 files with the most entropy:
 
 """
     return report_content
+
+
+
+def pr_report(data: Dict[str, Any]) -> str:
+    """
+    Returns the formatted PR-specific entropy report as a string.
+
+    Args:
+        data (Dict[str, Any]): Dictionary with the entropy data.
+
+    Returns:
+        str: Formatted GitHub markdown PR report.
+    """
+    title = "Pull Request Entropy Report"
+
+    # Extract details from data
+    pr_branch = data["pr_branch"]
+    main_branch = data["main_branch"]
+    total_entropy_introduced = data["total_entropy_introduced"]
+    number_of_files_changed = data["number_of_files_changed"]
+    entropy_data = data["entropy_per_file"]
+    commits = data["commits"]
+
+    # Sort files by normalized entropy in descending order and get the top 5
+    sorted_entropy = sorted(entropy_data.items(), key=lambda item: item[1], reverse=True)
+    top_files = sorted_entropy[:5]
+
+    # Format the report
+    pr_info = [
+        ["PR Branch", pr_branch],
+        ["Main Branch", main_branch],
+        ["Total Entropy Introduced", f"{total_entropy_introduced:.4f}"],
+        ["Number of Files Changed", number_of_files_changed],
+        ["Commit Dates", f"{commits[0]} to {commits[1]}"],
+    ]
+
+    top_files_info = [
+        [file_name, f"{entropy:.4f}"]
+        for file_name, entropy in top_files
+    ]
+
+    report_content = f"""
+{'=' * 80}
+{title:^80}
+{'=' * 80}
+
+Pull Request Comparison:
+{tabulate(pr_info, tablefmt="simple_grid")}
+
+Top 5 Files with Highest Entropy:
+{tabulate(top_files_info, headers=["File Name", "Entropy Introduced"], tablefmt="simple_grid")}
+
+"""
+    return report_content

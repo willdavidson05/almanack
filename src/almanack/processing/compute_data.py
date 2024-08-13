@@ -80,6 +80,80 @@ def compute_repo_data(repo_path: str) -> None:
         # If processing fails, return an error dictionary
         return {"repo_path": str(repo_path), "error": str(e)}
 
+import pathlib
+import pygit2
+from datetime import datetime, timezone
+from typing import Dict, Any
+
+def compute_pr_data(repo_path: str, pr_branch: str, main_branch: str) -> Dict[str, Any]:
+    """
+    Computes entropy data for a pull request compared to the main branch.
+
+    Args:
+        repo_path (str): The local path to the Git repository.
+        pr_branch (str): The branch name for the pull request.
+        main_branch (str): The branch name for the main branch.
+
+    Returns:
+        dict: A dictionary containing the following key-value pairs:
+            - "pr_branch": The PR branch being analyzed.
+            - "main_branch": The main branch being compared.
+            - "total_entropy_introduced": The total entropy introduced by the PR.
+            - "number_of_files_changed": The number of files changed in the PR.
+            - "entropy_per_file": A dictionary of entropy values for each changed file.
+            - "commits": A tuple containing the most recent commits on the PR and main branches.
+    """
+    try:
+        # Convert repo_path to an absolute path and initialize the repository
+        repo_path = pathlib.Path(repo_path).resolve()
+        repo = pygit2.Repository(str(repo_path))
+
+        # Get the PR and main branch references
+        pr_ref = repo.branches.local.get(pr_branch)
+        main_ref = repo.branches.local.get(main_branch)
+
+        # Get the most recent commits on each branch
+        pr_commit = repo.get(pr_ref.target)
+        main_commit = repo.get(main_ref.target)
+
+        # Retrieve the list of files that have been edited between the two commits
+        changed_files = get_edited_files(repo, main_commit, pr_commit)
+
+        # Calculate the total entropy introduced by the PR
+        total_entropy_introduced = calculate_aggregate_entropy(
+            repo_path,
+            str(main_commit.id),
+            str(pr_commit.id),
+            changed_files,
+        )
+
+        # Calculate the entropy for each file changed in the PR
+        file_entropy = calculate_normalized_entropy(
+            repo_path,
+            str(main_commit.id),
+            str(pr_commit.id),
+            changed_files,
+        )
+
+        # Convert commit times to UTC datetime objects, then format as date strings
+        pr_commit_date = datetime.fromtimestamp(pr_commit.commit_time, tz=timezone.utc).date().isoformat()
+        main_commit_date = datetime.fromtimestamp(main_commit.commit_time, tz=timezone.utc).date().isoformat()
+
+        # Return the data structure
+        return {
+            "pr_branch": pr_branch,
+            "main_branch": main_branch,
+            "total_entropy_introduced": total_entropy_introduced,
+            "number_of_files_changed": len(changed_files),
+            "entropy_per_file": file_entropy,
+            "commits": (main_commit_date, pr_commit_date),
+        }
+
+    except Exception as e:
+        # If processing fails, return an error dictionary
+        return {"pr_branch": pr_branch, "main_branch": main_branch, "error": str(e)}
+
+
 
 def process_repo_for_analysis(
     repo_url: str,
