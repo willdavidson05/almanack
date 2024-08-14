@@ -1,3 +1,5 @@
+# Used for displaying an entropy report for every PR opened to main
+---
 name: entropy-check
 
 on:
@@ -22,11 +24,14 @@ jobs:
         with:
           fetch-depth: 0 # Ensure the action respects the desired fetch depth
 
-      # Determine the PR branches
-      - name: Determine PR branches
+      # Determine the PR branches and set environment variables
+      - name: Set PR Branch Environment Variables
+        env:
+          PR_BRANCH: ${{ github.head_ref }}
+          MAIN_BRANCH: ${{ github.base_ref }}
         run: |
-            echo "PR_BRANCH=${{ github.head_ref }}"  >> "$GITHUB_ENV"
-            echo "MAIN_BRANCH=${{ github.base_ref }}" >> "$GITHUB_ENV"
+          echo "PR_BRANCH=${PR_BRANCH}" >> $GITHUB_ENV
+          echo "MAIN_BRANCH=${MAIN_BRANCH}" >> $GITHUB_ENV
 
       # Runs the entropy calculation script and saves the output to a file
       - name: Process repository entropy
@@ -41,16 +46,17 @@ jobs:
         id: format_report
         run: |
           {
-            echo "REPORT_CONTENT<<EOF"
-            echo "\`\`\`"
-            cat entropy_report.txt
-            echo "\`\`\`"
-            echo "EOF"
+            echo "REPORT_CONTENT<<EOF";
+            echo "\`\`\`";
+            cat entropy_report.txt;
+            echo "\`\`\`";
+            echo "EOF";
           } >> "$GITHUB_ENV"
 
       - name: PR comment
         uses: thollander/actions-comment-pull-request@v2
         with:
-          message: ${{ env.REPORT_CONTENT }}
+          message: |
+            ${{ env.REPORT_CONTENT }}
           comment_tag: execution
           mode: recreate # Recreates the comment if it already exists
