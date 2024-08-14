@@ -24,15 +24,17 @@ jobs:
         with:
           fetch-depth: 0 # Ensure the action respects the desired fetch depth
 
-      - name: Debug GitHub Environment
-        run: |
-          echo "GITHUB_ENV path: $GITHUB_ENV"
-          ls -l /home/runner/work/_temp/
-          
       - name: Set PR Branch Environment Variables
         run: |
           echo "PR_BRANCH=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
           echo "MAIN_BRANCH=${{ github.event.pull_request.base.ref }}" >> $GITHUB_ENV
+
+      - name: Debug GitHub Environment
+        run: |
+          echo "GITHUB_ENV path: $GITHUB_ENV"
+          ls -l /home/runner/work/_temp/
+          echo "Contents of $GITHUB_ENV:"
+          cat $GITHUB_ENV
 
       # Runs the entropy calculation script and saves the output to a file
       - name: Process repository entropy
