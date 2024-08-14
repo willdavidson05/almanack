@@ -26,8 +26,8 @@ jobs:
 
       - name: Set PR Branch Environment Variables
         run: |
-          echo "PR_BRANCH=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
-          echo "MAIN_BRANCH=${{ github.event.pull_request.base.ref }}" >> $GITHUB_ENV
+          echo "PR_BRANCH=${{ github.event.pull_request.head.ref }}" 
+          echo "MAIN_BRANCH=${{ github.event.pull_request.base.ref }}" 
 
       - name: Debug GitHub Environment
         run: |
