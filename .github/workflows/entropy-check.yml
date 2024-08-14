@@ -43,7 +43,6 @@ jobs:
 
       # Formats the entropy report and saves it to GitHub Actions env
       - name: Format Entropy Report
-        id: format_report
         run: |
           {
             echo "REPORT_CONTENT<<EOF";
