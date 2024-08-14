@@ -8,7 +8,6 @@ on:
       - main
   workflow_dispatch:
 
-
 jobs:
   entropy-check:
     runs-on: ubuntu-latest
@@ -25,13 +24,25 @@ jobs:
         with:
           fetch-depth: 0 # Ensure the action respects the desired fetch depth
 
+        # Determine the PR branches and set environment variables
+      - name: Set PR Branch Environment Variables
+        env:
+          PR_BRANCH: ${{ github.head_ref }}
+          MAIN_BRANCH: ${{ github.base_ref }}
+        run: |
+          "echo 'PR_BRANCH=${PR_BRANCH}' >> $GITHUB_ENV"
+          "echo 'MAIN_BRANCH=${MAIN_BRANCH}' >> $GITHUB_ENV"
+
       # Runs the entropy calculation script and saves the output to a file
       - name: Process repository entropy
-        run: poetry run almanack process_repo_entropy . > entropy_report.txt
+        run: |
+          "poetry run almanack process_pr_entropy \
+          --repo_path '.' \
+          --pr_branch '${{ env.PR_BRANCH }}' \
+          --main_branch '${{ env.MAIN_BRANCH }}' > entropy_report.txt"
 
       # Formats the entropy report and saves it to GitHub Actions env
       - name: Format Entropy Report
-        id: format_report
         run: |
           {
             echo "REPORT_CONTENT<<EOF";
@@ -40,7 +51,6 @@ jobs:
             echo "\`\`\`";
             echo "EOF";
           } >> "$GITHUB_ENV"
-
       - name: PR comment
         uses: thollander/actions-comment-pull-request@v2
         with:

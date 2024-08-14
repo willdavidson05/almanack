@@ -21,7 +21,7 @@ def repo_report(data: Dict[str, Any]) -> str:
 
     # Extract details from data
     repo_path = data["repo_path"]
-    total_normalized_entropy = data["total_normalized_entropy"]
+    total_normalized_entropy = data["normalized_total_entropy"]
     number_of_commits = data["number_of_commits"]
     number_of_files = data["number_of_files"]
     time_range_of_commits = data["time_range_of_commits"]
@@ -60,6 +60,61 @@ Repository information:
 
 Top 5 files with the most entropy:
 {tabulate(top_files_info, headers=["File Name", "Normalized Entropy"], tablefmt="simple_grid")}
+
+"""
+    return report_content
+
+
+def pr_report(data: Dict[str, Any]) -> str:
+    """
+    Returns the formatted PR-specific entropy report.
+
+    Args:
+        data (Dict[str, Any]): Dictionary with the entropy data.
+
+    Returns:
+        str: Formatted GitHub markdown.
+    """
+    title = "Pull Request Information Entropy Report"
+
+    # Extract details from data
+    pr_branch = data["pr_branch"]
+    main_branch = data["main_branch"]
+    total_entropy_introduced = data["total_entropy_introduced"]
+    number_of_files_changed = data["number_of_files_changed"]
+    entropy_data = data["file_level_entropy"]
+    commits = data["commits"]
+
+    # Filter files with entropy above average
+    above_average_files = {
+        file_name: entropy
+        for file_name, entropy in entropy_data.items()
+        if entropy > total_entropy_introduced
+    }
+    # Format the report
+    pr_info = [
+        ["PR Branch", pr_branch],
+        ["Main Branch", main_branch],
+        ["Total Entropy Introduced", f"{total_entropy_introduced:.4f}"],
+        ["Number of Files Changed", number_of_files_changed],
+        ["Commit Dates", f"{commits[0]} to {commits[1]}"],
+    ]
+
+    top_files_info = [
+        [file_name, f"{entropy:.4f}"]
+        for file_name, entropy in above_average_files.items()
+    ]
+
+    report_content = f"""
+{'=' * 50}
+{title:^50}
+{'=' * 50}
+
+Pull request comparison:
+{tabulate(pr_info, tablefmt="github")}
+
+Files with above average entropy:
+{tabulate(top_files_info, headers=["File Name", "File Entropy"], tablefmt="github")}
 
 """
     return report_content
