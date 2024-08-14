@@ -47,9 +47,7 @@ jobs:
         run: |
           {
             echo "REPORT_CONTENT<<EOF"
-            echo "\`\`\`"
-            cat entropy_report.txt
-            echo "\`\`\`"
+            echo "`cat entropy_report.txt`"
             echo "EOF"
           } >> "$GITHUB_ENV"
 
