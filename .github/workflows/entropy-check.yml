@@ -23,8 +23,11 @@ jobs:
         uses: ./.github/actions/install-python-env
         with:
           fetch-depth: 0 # Ensure the action respects the desired fetch depth
-
-        # Determine the PR branches and set environment variables
+          
+      - name: Print GITHUB_ENV
+        run: |
+          echo "GITHUB_ENV: $GITHUB_ENV"
+      # Determine the PR branches and set environment variables
       - name: Set PR Branch Environment Variables
         env:
           PR_BRANCH: ${{ github.head_ref }}
