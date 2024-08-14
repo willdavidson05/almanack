@@ -25,9 +25,18 @@ jobs:
           fetch-depth: 0 # Ensure the action respects the desired fetch depth
 
       - name: Set PR Branch Environment Variables
-        run: |
-          echo "PR_BRANCH=${{ github.head_ref }}" >> $GITHUB_ENV
-          echo "MAIN_BRANCH=${{ github.base_ref }}" >> $GITHUB_ENV
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.actions.setEnv({
+              name: 'PR_BRANCH',
+              value: github.context.payload.pull_request.head.ref
+            })
+            github.actions.setEnv({
+              name: 'MAIN_BRANCH',
+              value: github.context.payload.pull_request.base.ref
+            })
 
       # Runs the entropy calculation script and saves the output to a file
       - name: Process repository entropy
