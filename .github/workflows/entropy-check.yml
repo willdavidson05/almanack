@@ -1,53 +1,52 @@
 # Used for displaying an entropy report for every PR opened to main
 ---
-  name: entropy-check
-  
-  on:
-    pull_request_target:
-      branches:
-        - main
-    workflow_dispatch:
-  
-  jobs:
-    entropy-check:
-      runs-on: ubuntu-latest
-      permissions: write-all
-  
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
-          with:
-            fetch-depth: 0 # Fetch the entire history of commits
-  
-        - name: Install python env
-          uses: ./.github/actions/install-python-env
-          with:
-            fetch-depth: 0 # Ensure the action respects the desired fetch depth
-  
-        - name: Process repository entropy
-          env:
-            PR_BRANCH: ${{ github.event.pull_request.head.ref }}
-            MAIN_BRANCH: ${{ github.event.pull_request.base.ref }}
-          run: |
-            poetry run almanack process_pr_entropy \
-            --repo_path '.' \
-            --pr_branch "$PR_BRANCH" \
-            --main_branch "$MAIN_BRANCH" > entropy_report.txt
-  
-        - name: Format Entropy Report
-          id: format_report
-          run: |
-            echo "REPORT_CONTENT<<EOF" > report_content.txt
-            echo "\`\`\`" >> report_content.txt
-            cat entropy_report.txt >> report_content.txt
-            echo "\`\`\`" >> report_content.txt
-            echo "EOF" >> report_content.txt
-            echo "REPORT_CONTENT=$(cat report_content.txt)" >> $GITHUB_ENV
-  
-        - name: PR comment
-          uses: thollander/actions-comment-pull-request@v2
-          with:
-            message: ${{ env.REPORT_CONTENT }}
-            comment_tag: execution
-            mode: recreate
-  
+name: entropy-check
+
+on:
+  pull_request_target:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  entropy-check:
+    runs-on: ubuntu-latest
+    permissions: write-all
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch the entire history of commits
+
+      - name: Install python env
+        uses: ./.github/actions/install-python-env
+        with:
+          fetch-depth: 0 # Ensure the action respects the desired fetch depth
+
+      - name: Process repository entropy
+        env:
+          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+          MAIN_BRANCH: ${{ github.event.pull_request.base.ref }}
+        run: |
+          poetry run almanack process_pr_entropy \
+          --repo_path '.' \
+          --pr_branch "$PR_BRANCH" \
+          --main_branch "$MAIN_BRANCH" > entropy_report.txt
+
+      - name: Format Entropy Report
+        id: format_report
+        run: |
+          echo "REPORT_CONTENT<<EOF" > report_content.txt
+          echo "\`\`\`" >> report_content.txt
+          cat entropy_report.txt >> report_content.txt
+          echo "\`\`\`" >> report_content.txt
+          echo "EOF" >> report_content.txt
+          echo "REPORT_CONTENT=$(cat report_content.txt)" >> $GITHUB_ENV
+
+      - name: PR comment
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: ${{ env.REPORT_CONTENT }}
+          comment_tag: execution
+          mode: recreate
