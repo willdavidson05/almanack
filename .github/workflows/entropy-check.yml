@@ -12,6 +12,9 @@ jobs:
   entropy-check:
     runs-on: ubuntu-latest
     permissions: write-all
+    env:
+      PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+      MAIN_BRANCH: ${{ github.event.pull_request.base.ref }}
 
     steps:
       - name: Checkout code
@@ -24,32 +27,32 @@ jobs:
         with:
           fetch-depth: 0 # Ensure the action respects the desired fetch depth
 
-      - name: Set PR Branch Environment Variables
-        run: |
-          echo "PR_BRANCH=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
-          echo "MAIN_BRANCH=${{ github.event.pull_request.base.ref }}" >> $GITHUB_ENV
-
       # Runs the entropy calculation script and saves the output to a file
       - name: Process repository entropy
         run: |
-          poetry run almanack process_pr_entropy \
-            --repo_path '.' \
-            --pr_branch "${{ env.PR_BRANCH }}" \
-            --main_branch "${{ env.MAIN_BRANCH }}" > entropy_report.txt"
+          "poetry run almanack process_pr_entropy \
+          --repo_path '.' \
+          --pr_branch '${{ env.PR_BRANCH }}' \
+          --main_branch '${{ env.MAIN_BRANCH }}' > entropy_report.txt"
 
       # Formats the entropy report and saves it to GitHub Actions env
       - name: Format Entropy Report
+        env:
+          REPORT_CONTENT: |
+            {
+              echo "REPORT_CONTENT<<EOF";
+              echo "\`\`\`";
+              cat entropy_report.txt;
+              echo "\`\`\`";
+              echo "EOF";
+            }
         run: |
-          REPORT_CONTENT=$(cat entropy_report.txt)
-          echo "REPORT_CONTENT<<EOF" >> $GITHUB_ENV
-          echo "\`\`\`" >> $GITHUB_ENV
-          echo "$REPORT_CONTENT" >> $GITHUB_ENV
-          echo "\`\`\`" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          echo "$REPORT_CONTENT"
 
       - name: PR comment
         uses: thollander/actions-comment-pull-request@v2
         with:
-          message: ${{ env.REPORT_CONTENT }}
+          message: |
+            ${{ env.REPORT_CONTENT }}
           comment_tag: execution
-          mode: recreate
+          mode: recreate # Recreates the comment if it already exists
