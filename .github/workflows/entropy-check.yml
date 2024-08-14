@@ -32,25 +32,31 @@ jobs:
       - name: Debug GitHub Environment
         run: |
           echo "GITHUB_ENV path: $GITHUB_ENV"
+          echo "Current directory:"
+          pwd
+          echo "Directory contents:"
           ls -l /home/runner/work/_temp/
-          echo "Contents of $GITHUB_ENV:"
-          cat $GITHUB_ENV
+          echo "Attempt to read $GITHUB_ENV:"
+          if [ -f "$GITHUB_ENV" ]; then
+            cat "$GITHUB_ENV"
+          else
+            echo "$GITHUB_ENV does not exist or is not accessible"
+          fi
 
       # Runs the entropy calculation script and saves the output to a file
       - name: Process repository entropy
         run: |
           poetry run almanack process_pr_entropy \
-            --repo_path '.' \
-            --pr_branch "${{ env.PR_BRANCH }}" \
-            --main_branch "${{ env.MAIN_BRANCH }}" > entropy_report.txt
+          --repo_path '.' \
+          --pr_branch '${{ env.PR_BRANCH }}' \
+          --main_branch '${{ env.MAIN_BRANCH }}' > entropy_report.txt
 
       # Formats the entropy report and saves it to GitHub Actions env
       - name: Format Entropy Report
         run: |
-          REPORT_CONTENT=$(cat entropy_report.txt)
           echo "REPORT_CONTENT<<EOF" >> $GITHUB_ENV
           echo "\`\`\`" >> $GITHUB_ENV
-          echo "$REPORT_CONTENT" >> $GITHUB_ENV
+          cat entropy_report.txt >> $GITHUB_ENV
           echo "\`\`\`" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
