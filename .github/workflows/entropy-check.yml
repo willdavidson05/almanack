@@ -29,21 +29,22 @@ jobs:
           ls -alh /home/runner/work/_temp/
           echo "Temp directory check complete."
 
-      # Set branch variables using github-script
+      # Set branch variables and pass them as outputs
       - name: Set Branch Variables
-        uses: actions/github-script@v6
-        with:
-          script: |
-            core.exportVariable('PR_BRANCH', '${{ github.event.pull_request.head.ref }}');
-            core.exportVariable('MAIN_BRANCH', '${{ github.event.pull_request.base.ref }}');
+        id: set-branch-vars
+        run: |
+          echo "PR_BRANCH=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
+          echo "MAIN_BRANCH=${{ github.event.pull_request.base.ref }}" >> $GITHUB_ENV
+          echo "::set-output name=pr_branch::${{ github.event.pull_request.head.ref }}"
+          echo "::set-output name=main_branch::${{ github.event.pull_request.base.ref }}"
 
       - name: Process repository entropy
         id: process_entropy
         run: |
           poetry run almanack process_pr_entropy \
           --repo_path '.' \
-          --pr_branch "$PR_BRANCH" \
-          --main_branch "$MAIN_BRANCH" > entropy_report.txt
+          --pr_branch "${{ steps.set-branch-vars.outputs.pr_branch }}" \
+          --main_branch "${{ steps.set-branch-vars.outputs.main_branch }}" > entropy_report.txt
 
           echo "::set-output name=content::$(echo -e '\n\`\`\`\n$(cat entropy_report.txt)\n\`\`\`')"
 
