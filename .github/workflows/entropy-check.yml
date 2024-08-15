@@ -30,8 +30,8 @@ jobs:
           PR_BRANCH: ${{ github.head_ref }}
           MAIN_BRANCH: ${{ github.base_ref }}
         run: |
-          "echo 'PR_BRANCH=${PR_BRANCH}' >> $GITHUB_ENV"
-          "echo 'MAIN_BRANCH=${MAIN_BRANCH}' >> $GITHUB_ENV"
+          "echo PR_BRANCH=${PR_BRANCH} >> $GITHUB_ENV"
+          "echo MAIN_BRANCH=${MAIN_BRANCH} >> $GITHUB_ENV"
 
       # Runs the entropy calculation script and saves the output to a file
       - name: Process repository entropy
