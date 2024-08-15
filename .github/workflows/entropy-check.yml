@@ -25,14 +25,12 @@ jobs:
           fetch-depth: 0 # Ensure the action respects the desired fetch depth
 
         # Determine the PR branches and set environment variables
-      - name: Set PR Branch Environment Variables
+      - name: Set and Display PR Branch Environment Variables
         run: |
-          echo "PR_BRANCH=${{ github.head_ref }}"
-          echo "MAIN_BRANCH=${{ github.base_ref }}"
-        shell: bash
-        env:
-          PR_BRANCH: ${{ github.head_ref }}
-          MAIN_BRANCH: ${{ github.base_ref }}
+          export PR_BRANCH=${{ github.head_ref }}
+          export MAIN_BRANCH=${{ github.base_ref }}
+          echo "PR_BRANCH is $PR_BRANCH"
+          echo "MAIN_BRANCH is $MAIN_BRANCH"
 
 
       # Runs the entropy calculation script and saves the output to a file
