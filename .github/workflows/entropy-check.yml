@@ -36,10 +36,10 @@ jobs:
       # Runs the entropy calculation script and saves the output to a file
       - name: Process repository entropy
         run: |
-          "poetry run almanack process_pr_entropy \
+          poetry run almanack process_pr_entropy \
           --repo_path '.' \
           --pr_branch '${{ env.PR_BRANCH }}' \
-          --main_branch '${{ env.MAIN_BRANCH }}' > entropy_report.txt"
+          --main_branch '${{ env.MAIN_BRANCH }}' > entropy_report.txt
 
       # Formats the entropy report and saves it to GitHub Actions env
       - name: Format Entropy Report
