@@ -29,14 +29,13 @@ jobs:
           ls -alh /home/runner/work/_temp/
           echo "Temp directory check complete."
 
-      # Set branch variables directly without using echo to $GITHUB_ENV
+      # Set branch variables using github-script
       - name: Set Branch Variables
-        run: |
-          echo "PR_BRANCH=${{ github.event.pull_request.head.ref }}"
-          echo "MAIN_BRANCH=${{ github.event.pull_request.base.ref }}"
-        env:
-          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
-          MAIN_BRANCH: ${{ github.event.pull_request.base.ref }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.exportVariable('PR_BRANCH', '${{ github.event.pull_request.head.ref }}');
+            core.exportVariable('MAIN_BRANCH', '${{ github.event.pull_request.base.ref }}');
 
       - name: Process repository entropy
         id: process_entropy
