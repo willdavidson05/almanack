@@ -1,3 +1,5 @@
+# Used for displaying an entropy report for every PR opened to main
+---
 name: entropy-check
 
 on:
@@ -15,42 +17,44 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # Fetch the entire history of commits
 
       - name: Install python env
         uses: ./.github/actions/install-python-env
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # Ensure the action respects the desired fetch depth
 
-      # Debugging step to ensure the temp directory is accessible
-      - name: Check Temp Directory
+        # Determine the PR branches and set environment variables
+      - name: Set PR Branch Environment Variables
+        env:
+          PR_BRANCH: ${{ github.head_ref }}
+          MAIN_BRANCH: ${{ github.base_ref }}
         run: |
-          echo "Checking temp directory..."
-          ls -alh /home/runner/work/_temp/
-          echo "Temp directory check complete."
+          "echo 'PR_BRANCH=${PR_BRANCH}' >> $GITHUB_ENV"
+          "echo 'MAIN_BRANCH=${MAIN_BRANCH}' >> $GITHUB_ENV"
 
-      # Set branch variables and pass them as outputs
-      - name: Set Branch Variables
-        id: set-branch-vars
-        run: |
-          echo "PR_BRANCH=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
-          echo "MAIN_BRANCH=${{ github.event.pull_request.base.ref }}" >> $GITHUB_ENV
-          echo "::set-output name=pr_branch::${{ github.event.pull_request.head.ref }}"
-          echo "::set-output name=main_branch::${{ github.event.pull_request.base.ref }}"
-
+      # Runs the entropy calculation script and saves the output to a file
       - name: Process repository entropy
-        id: process_entropy
         run: |
-          poetry run almanack process_pr_entropy \
+          "poetry run almanack process_pr_entropy \
           --repo_path '.' \
-          --pr_branch "${{ steps.set-branch-vars.outputs.pr_branch }}" \
-          --main_branch "${{ steps.set-branch-vars.outputs.main_branch }}" > entropy_report.txt
+          --pr_branch '${{ env.PR_BRANCH }}' \
+          --main_branch '${{ env.MAIN_BRANCH }}' > entropy_report.txt"
 
-          echo "::set-output name=content::$(echo -e '\n\`\`\`\n$(cat entropy_report.txt)\n\`\`\`')"
-
+      # Formats the entropy report and saves it to GitHub Actions env
+      - name: Format Entropy Report
+        run: |
+          {
+            echo "REPORT_CONTENT<<EOF";
+            echo "\`\`\`";
+            cat entropy_report.txt;
+            echo "\`\`\`";
+            echo "EOF";
+          } >> "$GITHUB_ENV"
       - name: PR comment
         uses: thollander/actions-comment-pull-request@v2
         with:
-          message: ${{ steps.process_entropy.outputs.content }}
+          message: |
+            ${{ env.REPORT_CONTENT }}
           comment_tag: execution
-          mode: recreate
+          mode: recreate # Recreates the comment if it already exists
