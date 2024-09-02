@@ -22,7 +22,7 @@ jobs:
       - name: Install python env
         uses: ./.github/actions/install-python-env
         with:
-          fetch-depth: 0 # Ensure the action respects the desired fetch depth
+          fetch-depth: 0 
 
         # Determine the PR branches and set environment variables
       - name: Set and Display PR Branch Environment Variables
@@ -33,7 +33,7 @@ jobs:
           echo "MAIN_BRANCH is $MAIN_BRANCH"
 
 
-      # Runs the entropy calculation script and saves the output to a file
+      # Runs the entropy calculation cli and saves the output to a file
       - name: Process repository entropy
         run: |
           ```poetry run almanack process_pr_entropy \
