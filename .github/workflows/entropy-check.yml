@@ -1,5 +1,3 @@
-# Used for displaying an entropy report for every PR opened to main
----
 name: entropy-check
 
 on:
@@ -17,42 +15,56 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Fetch the entire history of commits
+          fetch-depth: 0
 
       - name: Install python env
         uses: ./.github/actions/install-python-env
         with:
-          fetch-depth: 0 # Ensure the action respects the desired fetch depth
+          fetch-depth: 0
 
-      # Determine the PR branches and set environment variables
-      - name: Set and Display PR Branch Environment Variables
+      - name: Debug Environment Setup
         run: |
-          echo "PR_BRANCH=${{ github.head_ref }}" >> $GITHUB_ENV
-          echo "MAIN_BRANCH=${{ github.base_ref }}" >> $GITHUB_ENV
-          echo "PR_BRANCH is ${{ github.head_ref }}"
-          echo "MAIN_BRANCH is ${{ github.base_ref }}"
+          PR_BRANCH="${{ github.head_ref }}"
+          MAIN_BRANCH="${{ github.base_ref }}"
+          echo "PR_BRANCH=$PR_BRANCH"
+          echo "MAIN_BRANCH=$MAIN_BRANCH"
+          
+          # Writing environment variables to a temporary file
+          echo "PR_BRANCH=$PR_BRANCH" > pr_branch.txt
+          echo "MAIN_BRANCH=$MAIN_BRANCH" > main_branch.txt
 
-      # Runs the entropy calculation script and saves the output to a file
+      - name: Verify Environment Variables
+        run: |
+          cat pr_branch.txt
+          cat main_branch.txt
+
       - name: Process repository entropy
         run: |
+          PR_BRANCH=$(cat pr_branch.txt)
+          MAIN_BRANCH=$(cat main_branch.txt)
           poetry run almanack process_pr_entropy \
           --repo_path "." \
-          --pr_branch "${{ env.PR_BRANCH }}" \
-          --main_branch "${{ env.MAIN_BRANCH }}" > entropy_report.txt
+          --pr_branch "$PR_BRANCH" \
+          --main_branch "$MAIN_BRANCH" > entropy_report.txt
 
-      # Formats the entropy report and saves it to GitHub Actions env
       - name: Format Entropy Report
         run: |
-          echo "REPORT_CONTENT<<EOF" >> $GITHUB_ENV
-          echo "\`\`\`" >> $GITHUB_ENV
-          cat entropy_report.txt >> $GITHUB_ENV
-          echo "\`\`\`" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          {
+            echo "REPORT_CONTENT<<EOF";
+            echo "\`\`\`";
+            cat entropy_report.txt;
+            echo "\`\`\`";
+            echo "EOF";
+          } > report_content.txt
+
+      - name: Verify Entropy Report
+        run: |
+          cat report_content.txt
 
       - name: PR comment
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
-            ${{ env.REPORT_CONTENT }}
+            $(cat report_content.txt)
           comment_tag: execution
-          mode: recreate # Recreates the comment if it already exists
+          mode: recreate
