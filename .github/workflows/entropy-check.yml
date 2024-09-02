@@ -22,7 +22,7 @@ jobs:
       - name: Install python env
         uses: ./.github/actions/install-python-env
         with:
-          fetch-depth: 0 
+          fetch-depth: 0
 
         # Determine the PR branches and set environment variables
       - name: Set and Display PR Branch Environment Variables
