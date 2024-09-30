@@ -33,18 +33,15 @@
             --main_branch "${{ github.base_ref }}" > entropy_report.txt
   
         # Formats the entropy report and saves it to GitHub Actions env
-        # - name: Format Entropy Report
-        #   run: |
-        #     {
-        #       echo "REPORT_CONTENT<<EOF";
-        #       echo "\`\`\`";
-        #       cat entropy_report.txt;
-        #       echo "\`\`\`";
-        #       echo "EOF";
-        #     } >> "$GITHUB_ENV"  
-        - name: Save Entropy Report
+        - name: Format Entropy Report
           run: |
-            echo "REPORT_CONTENT=$(cat entropy_report.txt)" >> "$GITHUB_ENV"
+            {
+              echo "REPORT_CONTENT<<EOF";
+              echo "\`\`\`";
+              cat entropy_report.txt;
+              echo "\`\`\`";
+              echo "EOF";
+            } >> "$GITHUB_ENV"  
             
         - name: PR comment
           uses: thollander/actions-comment-pull-request@v2
