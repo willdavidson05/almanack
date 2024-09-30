@@ -26,7 +26,7 @@
 
         # Ensure GITHUB_ENV exists before writing to it
         - name: Ensure GITHUB_ENV exists
-          run: mkdir -p $(dirname $GITHUB_ENV)
+          run: mkdir -p "$(dirname "$GITHUB_ENV")"
 
         # Runs the entropy calculation cli and saves the output to a file
         - name: Process repository entropy
