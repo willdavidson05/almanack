@@ -29,8 +29,8 @@
           run: |
             poetry run almanack process_pr_entropy \
             --repo_path "." \
-            --pr_branch="${{ github.head_ref }}" \
-            --main_branch="${{ github.base_ref }}" > entropy_report.txt
+            --pr_branch "${{ github.head_ref }}" \
+            --main_branch "${{ github.base_ref }}" > entropy_report.txt
   
         # Formats the entropy report and saves it to GitHub Actions env
         - name: Format Entropy Report
