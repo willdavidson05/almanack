@@ -24,6 +24,14 @@
           with:
             fetch-depth: 0
 
+
+        - name: Debug GITHUB_ENV path
+          run: echo $GITHUB_ENV
+  
+        - name: Ensure temp directory exists
+          run: mkdir -p /tmp/github_env
+
+
         # Runs the entropy calculation cli and saves the output to a file
         - name: Process repository entropy
           run: |
@@ -37,11 +45,11 @@
 
         # Set PR Branch Environment Variable (PR branch)
         - name: Set PR Branch Environment Variable
-          run: echo "PR_BRANCH=${{ github.head_ref }}" >> "$GITHUB_ENV"
+          run: echo "PR_BRANCH=${{ github.head_ref }}" >> /tmp/github_env
 
         # Set Main Branch Environment Variable (main branch)
         - name: Set Main Branch Environment Variable
-          run: echo "MAIN_BRANCH=${{ github.base_ref }}" >> "$GITHUB_ENV"
+          run: echo "MAIN_BRANCH=${{ github.base_ref }}" >> /tmp/github_env
 
 
         # Formats the entropy report and saves it to GitHub Actions env
