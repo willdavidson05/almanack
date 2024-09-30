@@ -1,54 +1,53 @@
 # Used for displaying an entropy report for every PR opened to main
 ---
-name: entropy-check
-
-on:
-  pull_request_target:
-    branches:
-      - main
-  workflow_dispatch:
-
-jobs:
-  entropy-check:
-    runs-on: ubuntu-latest
-    permissions: write-all
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Fetch the entire history of commits
-
-      - name: Install python env
-        uses: ./.github/actions/install-python-env
-        with:
-          fetch-depth: 0
-
-
-
-       # Runs the entropy calculation cli and saves the output to a file
-      - name: Process repository entropy
-        run: |
-          poetry run almanack process_pr_entropy \
-          --repo_path "." \
-          --pr_branch "${{ github.head_ref }}" \
-          --main_branch "${{ github.base_ref }}" > entropy_report.txt
-
-      # Formats the entropy report and saves it to GitHub Actions env
-      - name: Format Entropy Report
-        run: |
-          {
-            echo "REPORT_CONTENT<<EOF";
-            echo "\`\`\`";
-            cat entropy_report.txt;
-            echo "\`\`\`";
-            echo "EOF";
-          } > "$GITHUB_ENV"
-          
-      - name: PR comment
-        uses: thollander/actions-comment-pull-request@v2
-        with:
-          message: |
-            ${{ env.REPORT_CONTENT }}
-          comment_tag: execution
-          mode: recreate # Recreates the comment if it already exists
+  name: entropy-check
+  
+  on:
+    pull_request_target:
+      branches:
+        - main
+    workflow_dispatch:
+  
+  jobs:
+    entropy-check:
+      runs-on: ubuntu-latest
+      permissions: write-all
+  
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0 # Fetch the entire history of commits
+  
+        - name: Install python env
+          uses: ./.github/actions/install-python-env
+          with:
+            fetch-depth: 0
+  
+        # Runs the entropy calculation cli and saves the output to a file
+        - name: Process repository entropy
+          run: |
+            poetry run almanack process_pr_entropy \
+            --repo_path "." \
+            --pr_branch "${{ github.head_ref }}" \
+            --main_branch "${{ github.base_ref }}" > entropy_report.txt
+  
+        # Formats the entropy report and saves it to GitHub Actions env
+        - name: Format Entropy Report
+          run: |
+            {
+              echo "REPORT_CONTENT<<EOF";
+              echo "\`\`\`";
+              cat entropy_report.txt;
+              echo "\`\`\`";
+              echo "EOF";
+            } >> "$GITHUB_ENV"  # FIX: Use double quotes for $GITHUB_ENV
+            
+        - name: PR comment
+          uses: thollander/actions-comment-pull-request@v2
+          with:
+            message: |
+              ${{ env.REPORT_CONTENT }}
+            comment_tag: execution
+            mode: recreate # Recreates the comment if it already exists
+  
