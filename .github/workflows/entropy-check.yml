@@ -36,8 +36,6 @@
             --pr_branch "${{ github.head_ref }}" \
             --main_branch "${{ github.base_ref }}" > entropy_report.txt
             
-        - name: Check the temp directory exists
-          run: mkdir -p $GITHUB_ENV
 
         # Set PR Branch Environment Variable (PR branch)
         - name: Set PR Branch Environment Variable
