@@ -23,7 +23,11 @@
           uses: ./.github/actions/install-python-env
           with:
             fetch-depth: 0
-  
+
+        - name: Enable debug logging
+          run: echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
+
+          
         # Runs the entropy calculation cli and saves the output to a file
         - name: Process repository entropy
           run: |
@@ -31,7 +35,17 @@
             --repo_path "." \
             --pr_branch "${{ github.head_ref }}" \
             --main_branch "${{ github.base_ref }}" > entropy_report.txt
-  
+            
+          
+        # Set PR Branch Environment Variable (PR branch)
+        - name: Set PR Branch Environment Variable
+          run: echo "PR_BRANCH=${{ github.head_ref }}" >> "$GITHUB_ENV"
+
+        # Set Main Branch Environment Variable (main branch)
+        - name: Set Main Branch Environment Variable
+          run: echo "MAIN_BRANCH=${{ github.base_ref }}" >> "$GITHUB_ENV"
+
+
         # Formats the entropy report and saves it to GitHub Actions env
         - name: Save Entropy Report
           run: |
