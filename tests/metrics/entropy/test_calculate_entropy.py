@@ -4,12 +4,11 @@ Testing entropy functionality
 
 import pathlib
 
-from test_git_operations import get_most_recent_commits
-
-from almanack.processing.calculate_entropy import (
+from almanack.metrics.entropy.calculate_entropy import (
     calculate_aggregate_entropy,
     calculate_normalized_entropy,
 )
+from tests.test_git import get_most_recent_commits
 
 
 def test_calculate_normalized_entropy(

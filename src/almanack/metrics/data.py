@@ -6,12 +6,65 @@ import pathlib
 import shutil
 import tempfile
 from datetime import datetime, timezone
-from typing import Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 import pygit2
+import yaml
 
-from .calculate_entropy import calculate_aggregate_entropy, calculate_normalized_entropy
-from .git_operations import clone_repository, get_commits, get_edited_files
+from ..git import clone_repository, get_commits, get_edited_files
+from .entropy.calculate_entropy import (
+    calculate_aggregate_entropy,
+    calculate_normalized_entropy,
+)
+
+METRICS_TABLE = f"{pathlib.Path(__file__).parent!s}/metrics.yml"
+
+
+def get_table(repo_path: str) -> Dict[str, Any]:
+    """
+    Gather metrics on a repository and return the results in a structured format.
+
+    This function reads a metrics table from a predefined YAML file, computes relevant
+    data from the specified repository, and associates the computed results with
+    the metrics defined in the metrics table. If an error occurs during data
+    computation, an exception is raised.
+
+    Args:
+        repo_path (str): The file path to the repository for which metrics are
+        to be performed.
+
+    Returns:
+        List[Dict[str, Any]]: A list of dictionaries containing the metrics and
+        their associated results. Each dictionary includes the original metrics data
+        along with the computed result under the key "result".
+
+    Raises:
+        ReferenceError: If there is an error encountered while processing the
+        data, providing context in the error message.
+    """
+
+    # read the metrics table
+    with open(METRICS_TABLE, "r") as f:
+        metrics_table = yaml.safe_load(f)["metrics"]
+
+    # gather data for use in the metrics table
+    data = compute_repo_data(repo_path=repo_path)
+
+    if "error" in data.keys():
+        raise ReferenceError("Encountered an error with processing the data.", data)
+
+    # return metrics table (list of dictionaries as records of metrics)
+    return [
+        {
+            # remove the result-data-key as this won't be useful to external output
+            **{key: val for key, val in metric.items() if key != "result-data-key"},
+            # add the data results for the metrics to the table
+            "result": data[metric["result-data-key"]],
+        }
+        # for each metric, gather the related process data and add to a dictionary
+        # related to that metric along with others in a list.
+        for metric in metrics_table
+    ]
 
 
 def compute_repo_data(repo_path: str) -> None:

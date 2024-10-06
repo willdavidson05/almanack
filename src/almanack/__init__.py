@@ -12,11 +12,12 @@ Foundation (NSF) via SHI under Grant No. 2327079.
 """
 
 from .book import read
-from .processing.calculate_entropy import (
+from .metrics.data import get_table as table
+from .metrics.data import process_repo_for_analysis
+from .metrics.entropy.calculate_entropy import (
     calculate_aggregate_entropy,
     calculate_normalized_entropy,
 )
-from .processing.compute_data import process_repo_for_analysis
 
 # note: version placeholder is updated during build
 # by poetry-dynamic-versioning.
