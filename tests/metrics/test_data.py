@@ -1,5 +1,5 @@
 """
-Testing generate_data functionality
+Testing metrics/data functionality
 """
 
 import pathlib
@@ -16,7 +16,9 @@ from almanack.metrics.data import (
     compute_repo_data,
     file_exists_in_repo,
     get_table,
+    is_citable,
 )
+from tests.data.almanack.repo_setup.create_repo import repo_setup
 
 
 def test_generate_repo_data(entropy_repository_paths: dict[str, pathlib.Path]) -> None:
@@ -133,7 +135,7 @@ def test_metrics_yaml():
     ],
 )
 def test_file_exists_in_repo(
-    community_health_repository_path: str,
+    community_health_repository_path: pygit2.Repository,
     expected_file_name: str,
     check_extension: bool,
     extensions: List[str],
@@ -143,12 +145,8 @@ def test_file_exists_in_repo(
     Combined test for file_exists_in_repo function using different scenarios.
     """
 
-    # test a synthetic repo
-    repo_path = pathlib.Path(community_health_repository_path).resolve()
-    repo = pygit2.Repository(str(repo_path))
-
     result = file_exists_in_repo(
-        repo=repo,
+        repo=community_health_repository_path,
         expected_file_name=expected_file_name,
         check_extension=check_extension,
         extensions=extensions,
@@ -168,3 +166,62 @@ def test_file_exists_in_repo(
     )
 
     assert result == expected_result
+
+
+@pytest.mark.parametrize(
+    "files, expected",
+    [
+        # Test with CITATION.cff
+        ({"CITATION.cff": "CITATION content."}, True),
+        # Test with CITATION.bib
+        ({"CITATION.bib": "CITATION content."}, True),
+        # Test citation sections in markdown format
+        (
+            {"readme.md": "## Citation\nThis is a citation."},
+            True,
+        ),
+        (
+            {"readme.md": "## Citing us\n\nHere's our awesome citation."},
+            True,
+        ),
+        # RST scenarios
+        ({"README.md": "Citation\n--------"}, True),
+        ({"README.md": "Citing\n------"}, True),
+        ({"README.md": "Cite\n----"}, True),
+        ({"README.md": "How to cite\n-----------"}, True),
+        # DOI badge
+        (
+            {
+                "README.md": (
+                    "# Awesome project\n\n"
+                    "[![DOI](https://img.shields.io/badge/DOI-10.48550/arXiv.2311.13417-blue)]"
+                    "(https://doi.org/10.48550/arXiv.2311.13417)"
+                ),
+            },
+            True,
+        ),
+        ({"README.md": "## How to cite"}, True),
+        # Test with README without citation
+        (
+            {"readme.md": "This is a readme."},
+            False,
+        ),
+        # Test with no citation files
+        ({"random.txt": "Some random text."}, False),
+        # test the almanack itseft as a special case
+        (None, True),
+    ],
+)
+def test_is_citable(tmp_path, files, expected):
+    """
+    Test if the repository is citable based on various file configurations.
+    """
+
+    if files is not None:
+        repo = repo_setup(repo_path=tmp_path, files=files)
+    else:
+        # test the almanack itself
+        repo_path = pathlib.Path(".").resolve()
+        repo = pygit2.Repository(str(repo_path))
+
+    assert is_citable(repo) == expected
