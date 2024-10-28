@@ -166,6 +166,33 @@ def is_citable(repo: pygit2.Repository) -> bool:
     return False
 
 
+def default_branch_is_not_master(repo: pygit2.Repository) -> bool:
+    """
+    Checks if the default branch of the specified
+    repository is "master".
+
+    Args:
+        repo (Repository):
+            A pygit2.Repository object representing the Git repository.
+
+    Returns:
+        bool:
+            True if the default branch is "master", False otherwise.
+    """
+    # Access the "refs/remotes/origin/HEAD" reference to find the default branch
+    try:
+        # check whether remote head and remote master are the same
+        return (
+            repo.references.get("refs/remotes/origin/HEAD").target
+            == repo.references.get("refs/remotes/origin/master").target
+        )
+
+    except AttributeError:
+        # If "refs/remotes/origin/HEAD" or "refs/remotes/origin/master" doesn't exist,
+        # fall back to the local HEAD check
+        return repo.head.shorthand != "master"
+
+
 def compute_repo_data(repo_path: str) -> None:
     """
     Computes comprehensive data for a GitHub repository.
@@ -235,6 +262,7 @@ def compute_repo_data(repo_path: str) -> None:
                 expected_file_name="license",
             ),
             "repo-is-citable": is_citable(repo=repo),
+            "repo-default-branch-not-master": default_branch_is_not_master(repo=repo),
             "repo-agg-info-entropy": normalized_total_entropy,
             "repo-file-info-entropy": file_entropy,
         }
