@@ -39,6 +39,12 @@ metrics:
       String representing the date when this table was generated
       in the format of '%Y-%m-%dT%H:%M:%S.%fZ', for example:
       2024-11-22T18:20:30.123456Z .
+  - name: "almanack-version"
+    id: "SGA-META-0008"
+    result-type: "string"
+    description: >-
+      String representing the version of the almanack which was used
+      to generate this table.
   - name: "repo-includes-readme"
     id: "SGA-GL-0001"
     result-type: "bool"
