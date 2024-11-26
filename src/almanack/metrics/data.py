@@ -308,6 +308,44 @@ def count_unique_contributors(
     return len(contributors)
 
 
+def count_repo_tags(repo: pygit2.Repository, since: Optional[datetime] = None) -> int:
+    """
+    Counts the number of tags in a pygit2 repository.
+
+    If a `since` datetime is provided, counts only tags associated
+    with commits made after the specified datetime. Otherwise,
+    counts all tags in the repository.
+
+    Args:
+        repo (pygit2.Repository):
+            The repository to analyze.
+        since (Optional[datetime]):
+            The cutoff datetime. Only tags for commits after
+            this datetime are counted. If None, all tags are counted.
+
+    Returns:
+        int:
+            The number of tags in the repository that meet the criteria.
+    """
+    since_timestamp = since.timestamp() if since else 0
+
+    count = 0
+    for ref in repo.references:
+        if ref.startswith("refs/tags/"):
+            tag = repo.lookup_reference(ref)
+            target_commit = repo[tag.target]
+
+            # Consider lightweight or annotated tags
+            if target_commit.type == pygit2.GIT_OBJECT_TAG:
+                target_commit = repo[target_commit.target]
+
+            # Check commit timestamp against `since`
+            if target_commit.commit_time > since_timestamp:
+                count += 1
+
+    return count
+
+
 def compute_repo_data(repo_path: str) -> None:
     """
     Computes comprehensive data for a GitHub repository.
@@ -388,10 +426,15 @@ def compute_repo_data(repo_path: str) -> None:
         "almanack-version": _get_almanack_version(),
         "repo-unique-contributors": count_unique_contributors(repo=repo),
         "repo-unique-contributors-past-year": count_unique_contributors(
-            repo=repo, since=DATETIME_NOW - timedelta(days=365)
+            repo=repo, since=(one_year_ago := DATETIME_NOW - timedelta(days=365))
         ),
         "repo-unique-contributors-past-182-days": count_unique_contributors(
-            repo=repo, since=DATETIME_NOW - timedelta(days=182)
+            repo=repo, since=(half_year_ago := DATETIME_NOW - timedelta(days=182))
+        ),
+        "repo-tags-count": count_repo_tags(repo=repo),
+        "repo-tags-count-past-year": count_repo_tags(repo=repo, since=one_year_ago),
+        "repo-tags-count-past-182-days": count_repo_tags(
+            repo=repo, since=half_year_ago
         ),
         "repo-agg-info-entropy": normalized_total_entropy,
         "repo-file-info-entropy": file_entropy,

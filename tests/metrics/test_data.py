@@ -17,6 +17,7 @@ from almanack.metrics.data import (
     METRICS_TABLE,
     _get_almanack_version,
     compute_repo_data,
+    count_repo_tags,
     count_unique_contributors,
     default_branch_is_not_master,
     file_exists_in_repo,
@@ -602,3 +603,68 @@ def test_count_unique_contributors(tmp_path, files, since, expected_count):
 
     # Assert the result matches the expected count
     assert result == expected_count, f"Expected {expected_count}, got {result}"
+
+
+@pytest.mark.parametrize(
+    "files, since, expected_tag_count",
+    [
+        # No tags in the repository
+        (
+            [
+                {"files": {"file1.txt": "Initial content"}},
+                {"files": {"file2.txt": "Another content"}},
+            ],
+            None,
+            0,
+        ),
+        # One tag in the repository, no since filter
+        (
+            [
+                {"files": {"file1.txt": "Initial content"}, "tag": "v1.0"},
+                {"files": {"file2.txt": "Another content"}},
+            ],
+            None,
+            1,
+        ),
+        # Multiple tags in the repository, no since filter
+        (
+            [
+                {"files": {"file1.txt": "Initial content"}, "tag": "v1.0"},
+                {"files": {"file2.txt": "More content"}, "tag": "v1.1"},
+                {"files": {"file3.txt": "Even more content"}, "tag": "v2.0"},
+            ],
+            None,
+            3,
+        ),
+        # Filter by datetime: Only recent tags count
+        (
+            [
+                {
+                    "files": {"file1.txt": "Initial content"},
+                    "tag": "v1.0",
+                    "commit-date": datetime.now() - timedelta(days=10),
+                },
+                {
+                    "files": {"file2.txt": "More content"},
+                    "tag": "v1.1",
+                    "commit-date": datetime.now() - timedelta(days=5),
+                },
+                {
+                    "files": {"file3.txt": "Even more content"},
+                    "tag": "v2.0",
+                    "commit-date": datetime.now() - timedelta(days=1),
+                },
+            ],
+            datetime.now() - timedelta(days=7),  # Only tags from the last 7 days
+            2,
+        ),
+    ],
+)
+def test_count_repo_tags(tmp_path, files, since, expected_tag_count):
+    """
+    Test count_repo_tags with optional since parameter.
+    """
+    repo = repo_setup(repo_path=tmp_path, files=files)
+
+    # Assert the tag count matches the expected value
+    assert count_repo_tags(repo, since=since) == expected_tag_count
