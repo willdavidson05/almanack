@@ -6,9 +6,10 @@ import logging
 import pathlib
 import shutil
 import tempfile
+import time
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional, Tuple
-from urllib.parse import quote
+from urllib.parse import urlparse
 
 import pygit2
 import requests
@@ -366,7 +367,18 @@ def compute_repo_data(repo_path: str) -> None:
     repo_path = pathlib.Path(repo_path).resolve()
     repo = pygit2.Repository(str(repo_path))
 
-    remote_repo_data = fetch_api_data(remote_url=get_remote_url(repo=repo))
+    remote_url = get_remote_url(repo=repo)
+
+    # gather data from ecosystems repo api
+    remote_repo_data = get_api_data(
+        params={"url": remote_url} if remote_url is not None else None
+    )
+
+    # gather data from github repo workflows api
+    gh_workflows_data = get_github_build_metrics(
+        repo_url=remote_url, branch=repo.head.shorthand, max_runs=100
+    )
+
     # Retrieve the list of commits from the repository
     commits = get_commits(repo)
     most_recent_commit = commits[0]
@@ -453,6 +465,10 @@ def compute_repo_data(repo_path: str) -> None:
         ),
         "repo-forks-count": remote_repo_data.get("forks_count", None),
         "repo-subscribers-count": remote_repo_data.get("subscribers_count", None),
+        "repo-gh-workflow-success-ratio": gh_workflows_data.get("success_ratio", None),
+        "repo-gh-workflow-succeeding-runs": gh_workflows_data.get("total_runs", None),
+        "repo-gh-workflow-failing-runs": gh_workflows_data.get("successful_runs", None),
+        "repo-gh-workflow-queried-total": gh_workflows_data.get("failing_runs", None),
         "repo-agg-info-entropy": normalized_total_entropy,
         "repo-file-info-entropy": file_entropy,
     }
@@ -629,53 +645,128 @@ def _get_almanack_version() -> str:
         return almanack.__version__
 
 
-def fetch_api_data(
-    remote_url: Optional[str],
+def get_api_data(
     api_endpoint: str = "https://repos.ecosyste.ms/api/v1/repositories/lookup",
+    params: Optional[Dict[str, str]] = None,
 ) -> dict:
     """
-    Fetch repository data from the repos.ecosyste.ms API
-    based on the remote URL.
+    Get data from an API based on the remote URL, with retry logic for GitHub rate limiting.
 
     Args:
-        remote_url (Optional[str]):
-            The remote URL of the repository to look up.
         api_endpoint (str):
             The HTTP API endpoint to use for the request.
+        params (Optional[Dict[str, str]])
+             Additional query parameters to include in the GET request.
+
+    Returns:
+        dict: The JSON response from the API as a dictionary.
+
+    Raises:
+        requests.RequestException: If the API call fails for reasons other than rate limiting.
+    """
+    if params is None:
+        params = {}
+
+    retries = 30  # Number of attempts for rate limit errors
+    backoff = 15  # Seconds to wait between retries
+
+    for attempt in range(retries):
+        try:
+            # Perform the GET request with query parameters
+            response = requests.get(
+                api_endpoint,
+                headers={"accept": "application/json"},
+                params=params,
+                timeout=300,
+            )
+
+            # Raise an exception for HTTP errors
+            response.raise_for_status()
+
+            # Parse and return the JSON response
+            return response.json()
+
+        except requests.HTTPError:
+            # Check for rate limit error (403 with a rate limit header)
+            if (
+                # ignore ruff linting code below as 403 is a known HTTP error code
+                response.status_code == 403  # noqa: PLR2004
+                and "X-RateLimit-Remaining" in response.headers
+            ):
+                if attempt < retries - 1:
+                    LOGGER.warning(
+                        f"Rate limit exceeded (attempt {attempt + 1}/{retries}). Retrying in {backoff} seconds..."
+                    )
+                    time.sleep(backoff)
+                else:
+                    LOGGER.warning("Rate limit exceeded. All retry attempts exhausted.")
+                    return {}
+            else:
+                # Raise other HTTP errors immediately
+                return {}
+        except requests.RequestException:
+            # Raise other non-HTTP exceptions immediately
+            return {}
+
+    return {}  # Default return in case all retries fail
+
+
+def get_github_build_metrics(
+    repo_url: str,
+    branch: str = "main",
+    max_runs: int = 100,
+    github_api_endpoint: str = "https://api.github.com/repos",
+) -> dict:
+    """
+    Fetches the success ratio of the latest GitHub Actions build runs for a specified branch.
+
+    Args:
+        repo_url (str):
+            The full URL of the repository (e.g., 'http://github.com/org/repo').
+        branch (str):
+            The branch to filter for the workflow runs (default: "main").
+        max_runs (int):
+            The maximum number of latest workflow runs to analyze.
+        github_api_endpoint (str):
+            Base API endpoint for GitHub repositories.
 
     Returns:
         dict:
-            The JSON response from the API as a dictionary.
-
-    Raises:
-        requests.RequestException:
-            If the API call fails or the response cannot
-            be parsed as JSON.
+            The success ratio and details of the analyzed workflow runs.
     """
-
-    # check if we have no remote_url
-    if remote_url is None:
+    # Validate and parse the repository URL
+    parsed_url = urlparse(repo_url)
+    if parsed_url.netloc != "github.com" or not parsed_url.path:
         return {}
-
-    # Encode the remote URL for the query parameter
-    encoded_url = quote(remote_url, safe="")
-
-    # Construct the full API URL
-    full_url = f"{api_endpoint}?url={encoded_url}"
 
     try:
-        # Perform the GET request
-        response = requests.get(
-            full_url, headers={"accept": "application/json"}, timeout=300
+        # gather the owner and repo name from the parsed url path
+        owner, repo_name = parsed_url.path.strip("/").split("/")
+    except ValueError:
+        return {}
+
+    # Fetch the latest workflow run data using get_api_data
+    github_response = get_api_data(
+        # Construct the API URL for GitHub Actions runs
+        api_endpoint=f"{github_api_endpoint}/{owner}/{repo_name}/actions/runs",
+        params={"event": "push", "branch": branch, "per_page": max_runs},
+    )
+
+    if github_response.get("workflow_runs"):
+        workflow_runs = github_response["workflow_runs"]
+
+        # Count successes and total runs
+        total_runs = len(workflow_runs)
+        successful_runs = sum(
+            1 for run in workflow_runs if run["conclusion"] == "success"
         )
 
-        # Raise an exception for HTTP errors
-        response.raise_for_status()
+        return {
+            "success_ratio": successful_runs / total_runs,
+            "total_runs": total_runs,
+            "successful_runs": successful_runs,
+            "failing_runs": total_runs - successful_runs,
+        }
 
-        # Parse and return the JSON response
-        return response.json()
-
-    except requests.RequestException as e:
-        # return an empty dictionary if anything goes wrong
-        LOGGER.warning(f"Failed to fetch repository data: {e}")
-        return {}
+    # else we return an empty dictionary
+    return {}

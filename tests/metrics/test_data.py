@@ -21,8 +21,9 @@ from almanack.metrics.data import (
     count_repo_tags,
     count_unique_contributors,
     default_branch_is_not_master,
-    fetch_api_data,
     file_exists_in_repo,
+    get_api_data,
+    get_github_build_metrics,
     get_table,
     includes_common_docs,
     is_citable,
@@ -672,9 +673,9 @@ def test_count_repo_tags(tmp_path, files, since, expected_tag_count):
     assert count_repo_tags(repo, since=since) == expected_tag_count
 
 
-def test_fetch_api_data(current_repo):
+def test_get_api_data(current_repo):
     """
-    Test fetch_api_data using the current repository's remote URL.
+    Test get_api_data using the current repository's remote URL.
     """
     # Get the remote URL of the current repository
     remote_url = get_remote_url(current_repo)
@@ -683,7 +684,7 @@ def test_fetch_api_data(current_repo):
     ), "Remote URL could not be determined for the repository."
 
     # Fetch repository metadata
-    repo_data = fetch_api_data(remote_url)
+    repo_data = get_api_data(params={"url": remote_url})
 
     # Assertions to verify the response
     assert isinstance(repo_data, dict), "The returned repo_data should be a dictionary."
@@ -692,3 +693,22 @@ def test_fetch_api_data(current_repo):
     assert (
         repo_data["html_url"] == remote_url
     ), "The repo_data URL should match the repository's remote URL."
+
+
+def test_get_github_build_metrics():
+    """
+    Tests get_github_build_metrics
+    """
+
+    # perform a query against the upstream almanack repo
+    result = get_github_build_metrics(
+        repo_url="https://github.com/software-gardening/almanack",
+        branch="main",
+        max_runs=100,
+    )
+
+    # check the types for the results (actual values may vary)
+    assert isinstance(result["success_ratio"], float)
+    assert isinstance(result["total_runs"], int)
+    assert isinstance(result["successful_runs"], int)
+    assert isinstance(result["failing_runs"], int)
