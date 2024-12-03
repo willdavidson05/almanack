@@ -380,6 +380,9 @@ def compute_repo_data(repo_path: str) -> None:
         repo_url=remote_url, branch=repo.head.shorthand, max_runs=100
     )
 
+    # gather data from ecosystems packages api
+    packages_data = get_ecosystems_package_metrics(repo_url=remote_url)
+
     # Retrieve the list of commits from the repository
     commits = get_commits(repo)
     most_recent_commit = commits[0]
@@ -476,6 +479,9 @@ def compute_repo_data(repo_path: str) -> None:
         ),
         "repo-forks-count": remote_repo_data.get("forks_count", None),
         "repo-subscribers-count": remote_repo_data.get("subscribers_count", None),
+        "repo-packages-ecosystems": packages_data.get("ecosystems_names", None),
+        "repo-packages-ecosystems-count": packages_data.get("ecosystems_count", None),
+        "repo-packages-versions-count": packages_data.get("versions_count", None),
         "repo-social-media-platforms": social_media_metrics.get(
             "social_media_platforms", None
         ),
@@ -703,7 +709,7 @@ def get_api_data(
             # Parse and return the JSON response
             return response.json()
 
-        except requests.HTTPError:
+        except requests.HTTPError as httpe:
             # Check for rate limit error (403 with a rate limit header)
             if (
                 # ignore ruff linting code below as 403 is a known HTTP error code
@@ -720,11 +726,16 @@ def get_api_data(
                     return {}
             else:
                 # Raise other HTTP errors immediately
+                LOGGER.warning(f"Experienced an unexpected HTTP request error: {httpe}")
                 return {}
-        except requests.RequestException:
+        except requests.RequestException as reqe:
             # Raise other non-HTTP exceptions immediately
+            LOGGER.warning(f"Experienced an unexpected request error: {reqe}")
             return {}
 
+    LOGGER.warning(
+        "Experienced an unexpected error which resulted in a empty request return."
+    )
     return {}  # Default return in case all retries fail
 
 
@@ -787,6 +798,68 @@ def get_github_build_metrics(
 
     # else we return an empty dictionary
     return {}
+
+
+def get_ecosystems_package_metrics(repo_url: str) -> Dict[str, Any]:
+    """
+    Fetches package data from the ecosystem API and calculates metrics
+    about the number of unique ecosystems, total version counts,
+    and the list of ecosystem names.
+
+    Args:
+        repo_url (str):
+            The repository URL of the package to query.
+
+    Returns:
+        Dict[str, Any]:
+            A dictionary containing information about packages
+            related to the repository.
+    """
+
+    if repo_url is None:
+        LOGGER.warning(
+            "Did not receive a valid repository URL and unable to gather package metrics."
+        )
+        return {}
+
+    # normalize http to https if necessary
+    if repo_url.startswith("http://"):
+        LOGGER.warning(
+            "Received `http://` repository URL for package metrics search. Normalizing to use `https://`."
+        )
+        repo_url = repo_url.replace("http://", "https://")
+
+    # normalize git@ ssh links to https if necessary
+    if repo_url.startswith("git@"):
+        LOGGER.warning(
+            "Received `git@` repository URL for package metrics search. Normalizing to use `https://`."
+        )
+        domain, path = repo_url[4:].split(":", 1)
+        repo_url = f"https://{domain}/{path}".removesuffix(".git")
+
+    # perform package srequest
+    package_data = get_api_data(
+        api_endpoint="https://packages.ecosyste.ms/api/v1/packages/lookup",
+        params={"repository_url": repo_url},
+    )
+
+    # Initialize counters
+    ecosystems = set()
+    total_versions = 0
+
+    for entry in package_data:
+        # count ecosystems
+        if "ecosystem" in entry:
+            ecosystems.add(entry["ecosystem"])
+
+        # sum versions
+        total_versions += entry.get("versions_count", 0)
+
+    return {
+        "ecosystems_count": len(ecosystems),
+        "versions_count": total_versions,
+        "ecosystems_names": sorted(ecosystems),
+    }
 
 
 def detect_social_media_links(content: str) -> Dict[str, List[str]]:
