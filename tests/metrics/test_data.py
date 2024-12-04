@@ -29,6 +29,7 @@ from almanack.metrics.data import (
     get_table,
     includes_common_docs,
     is_citable,
+    measure_coverage,
 )
 from tests.data.almanack.repo_setup.create_repo import repo_setup
 
@@ -714,6 +715,44 @@ def test_get_github_build_metrics():
     assert isinstance(result["total_runs"], int)
     assert isinstance(result["successful_runs"], int)
     assert isinstance(result["failing_runs"], int)
+
+
+@pytest.mark.parametrize(
+    "repo_or_path, primary_language, local_file",
+    [
+        # tests local case (python coverage.xml)
+        (None, "Python", None),
+        # test python coverage.json
+        ("repo", "Python", "tests/data/almanack/coverage/python/coverage.json"),
+        ("repo", "Python", "tests/data/almanack/coverage/python/coverage.lcov"),
+    ],
+)
+def test_measure_coverage(tmp_path, repo_or_path, primary_language, local_file):
+    """
+    Test measure_coverage with parameterized inputs for local files and repos.
+    """
+
+    if repo_or_path is None:
+        # test the almanack itself
+        repo_path = pathlib.Path(".").resolve()
+        repo = pygit2.Repository(str(repo_path))
+    else:
+        # read the local file
+        with open(file=local_file, mode="r") as file:
+            file_contents = "\n".join(file.readlines())
+        repo = repo_setup(
+            repo_path=tmp_path,
+            files=[{"files": {pathlib.Path(local_file).name: file_contents}}],
+        )
+
+    # Run the test function
+    coverage_metrics = measure_coverage(repo=repo, primary_language=primary_language)
+
+    # Assert that the result matches the expected outcome
+    assert isinstance(coverage_metrics["code_coverage_percent"], float)
+    assert isinstance(coverage_metrics["date_of_last_coverage_run"], datetime)
+    assert isinstance(coverage_metrics["total_lines"], int)
+    assert isinstance(coverage_metrics["executed_lines"], int)
 
 
 def test_get_ecosystems_package_metrics():
