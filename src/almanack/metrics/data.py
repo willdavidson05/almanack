@@ -425,6 +425,7 @@ def compute_repo_data(repo_path: str) -> None:
         expected_file_name="readme",
     )
 
+    # gather social media metrics
     social_media_metrics = (
         detect_social_media_links(
             content=read_file(repo=repo, filepath="readme.md", case_insensitive=True)
@@ -432,6 +433,9 @@ def compute_repo_data(repo_path: str) -> None:
         if readme_exists
         else {}
     )
+
+    # gather doi citation data
+    doi_citation_data = find_doi_citation_data(repo=repo)
 
     # Return the data structure
     return {
@@ -467,6 +471,12 @@ def compute_repo_data(repo_path: str) -> None:
         "almanack-version": _get_almanack_version(),
         "repo-primary-language": remote_repo_data.get("language", None),
         "repo-primary-license": remote_repo_data.get("license", None),
+        "repo-doi": doi_citation_data["doi"],
+        "repo-doi-publication-date": (
+            doi_citation_data["publication_date"].strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+            if doi_citation_data["publication_date"] is not None
+            else None
+        ),
         "repo-unique-contributors": count_unique_contributors(repo=repo),
         "repo-unique-contributors-past-year": count_unique_contributors(
             repo=repo, since=(one_year_ago := DATETIME_NOW - timedelta(days=365))
@@ -496,6 +506,14 @@ def compute_repo_data(repo_path: str) -> None:
         "repo-social-media-platforms-count": social_media_metrics.get(
             "social_media_platforms_count", None
         ),
+        "repo-doi-valid-format": doi_citation_data["valid_format_doi"],
+        "repo-doi-https-resolvable": doi_citation_data["https_resolvable_doi"],
+        "repo-days-between-doi-publication-date-and-latest-commit": (
+            (most_recent_commit_date - doi_citation_data["publication_date"]).days
+            if doi_citation_data["publication_date"] is not None
+            else None
+        ),
+        "repo-doi-cited-by-count": doi_citation_data["cited_by_count"],
         "repo-gh-workflow-success-ratio": gh_workflows_data.get("success_ratio", None),
         "repo-gh-workflow-succeeding-runs": gh_workflows_data.get("total_runs", None),
         "repo-gh-workflow-failing-runs": gh_workflows_data.get("successful_runs", None),
@@ -507,9 +525,7 @@ def compute_repo_data(repo_path: str) -> None:
             else None
         ),
         "repo-days-between-last-coverage-run-latest-commit": (
-            (most_recent_commit_date - date_of_last_coverage_run).strftime(
-                "%Y-%m-%dT%H:%M:%S.%fZ"
-            )
+            (most_recent_commit_date - date_of_last_coverage_run).days
             if date_of_last_coverage_run is not None
             else None
         ),
@@ -1067,3 +1083,102 @@ def detect_social_media_links(content: str) -> Dict[str, List[str]]:
         "social_media_platforms": sorted(found_platforms),
         "social_media_platforms_count": len(found_platforms),
     }
+
+
+def find_doi_citation_data(repo: pygit2.Repository) -> Dict[str, Any]:
+    """
+    Find and validate DOI information from a CITATION.cff
+    file in a repository.
+
+    This function searches for a `CITATION.cff` file in the provided repository,
+    extracts the DOI (if available), validates its format, checks its
+    resolvability via HTTP, and performs an exact DOI lookup on the OpenAlex API.
+
+    Args:
+        repo (pygit2.Repository):
+            The repository object to search for the CITATION.cff file.
+
+    Returns:
+        Dict[str, Any]:
+            A dictionary containing DOI-related information and metadata.
+    """
+
+    result = {
+        "doi": None,
+        "valid_format_doi": None,
+        "https_resolvable_doi": None,
+        "publication_date": None,
+        "cited_by_count": None,
+    }
+
+    # Find the CITATION.cff file
+    if (citationcff_file := find_file(repo=repo, filepath="CITATION.cff")) is None:
+        LOGGER.warning("No CITATION.cff file discovered.")
+        return result
+
+    try:
+        # Read and parse the CITATION.cff file
+        citation_data = yaml.safe_load(read_file(repo=repo, entry=citationcff_file))
+
+        # Extract DOI from 'doi' or 'identifiers' field
+        if "doi" in citation_data.keys():
+            result["doi"] = citation_data.get("doi", None)
+        elif "identifiers" in citation_data.keys():
+            result["doi"] = next(
+                (
+                    identifier["value"]
+                    for identifier in citation_data.get("identifiers", [])
+                    if identifier.get("type") == "doi"
+                ),
+                None,
+            )
+    except yaml.YAMLError as e:
+        LOGGER.warning(f"Error reading YAML: {e}")
+
+    if result["doi"]:
+        # Validate the DOI format
+        result["valid_format_doi"] = bool(
+            re.match(r"^10\.\d{4,9}/[-._;()/:A-Za-z0-9]+$", result["doi"])
+        )
+        if result["valid_format_doi"]:
+            try:
+                # Check DOI resolvability via HTTPS
+                if (
+                    requests.head(
+                        f"https://doi.org/{result['doi']}",
+                        allow_redirects=True,
+                        timeout=30,
+                    ).status_code
+                    == 200  # noqa: PLR2004
+                ):
+                    result["https_resolvable_doi"] = True
+                else:
+                    LOGGER.warning(
+                        f"DOI does not resolve properly: https://doi.org/{result['doi']}"
+                    )
+                    result["https_resolvable_doi"] = False
+
+            except requests.RequestException as e:
+                LOGGER.warning(f"Error resolving DOI: {e}")
+                result["https_resolvable_doi"] = False
+
+            # Perform exact DOI lookup on OpenAlex
+            try:
+                openalex_result = get_api_data(
+                    api_endpoint=f"https://api.openalex.org/works/doi:{result['doi']}"
+                )
+                publication_date = openalex_result.get("publication_date", None)
+                result.update(
+                    {
+                        "publication_date": (
+                            datetime.strptime(publication_date, "%Y-%m-%d")
+                            if publication_date is not None
+                            else None
+                        ),
+                        "cited_by_count": openalex_result.get("cited_by_count", None),
+                    }
+                )
+            except requests.RequestException as e:
+                LOGGER.warning(f"Error during OpenAlex exact DOI lookup: {e}")
+
+    return result
