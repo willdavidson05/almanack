@@ -20,6 +20,7 @@ from almanack.metrics.data import (
     _get_almanack_version,
     compute_almanack_score,
     compute_repo_data,
+    gather_failed_almanack_metric_checks,
     get_api_data,
     get_github_build_metrics,
     get_table,
@@ -87,6 +88,7 @@ def test_get_table(entropy_repository_paths: dict[str, pathlib.Path]) -> None:
             "result-type",
             "sustainability_correlation",
             "description",
+            "correction_guidance",
             "result",
         ]
 
@@ -121,6 +123,9 @@ def test_metrics_yaml():
                             "enum": [1, -1, 0],
                         },
                         "description": {"type": "string"},
+                        "correction_guidance": {
+                            "anyOf": [{"type": "string"}, {"type": "null"}]
+                        },
                     },
                     "required": [
                         "name",
@@ -128,6 +133,7 @@ def test_metrics_yaml():
                         "result-type",
                         "sustainability_correlation",
                         "description",
+                        "correction_guidance",
                     ],
                 },
             }
@@ -986,3 +992,56 @@ def test_compute_almanack_score(
 
     result = compute_almanack_score(almanack_table_data)
     assert result == expected, f"Expected {expected}, but got {result}"
+
+
+@pytest.mark.parametrize(
+    "files",
+    [
+        # basic repo without much
+        [
+            {"files": {"file2.txt": "Initial content"}},
+        ],
+        # include a readme
+        [
+            {"files": {"readme.md": "Initial content"}},
+            {"files": {"file2.txt": "More content"}},
+        ],
+        # Add another valid file to change the table result
+        [
+            {
+                "files": {
+                    "readme.md": "Initial content",
+                    "citation.cff": "A citation file",
+                }
+            },
+            {"files": {"file2.txt": "More content"}},
+        ],
+    ],
+)
+def test_gather_failed_almanack_metric_checks(tmp_path, files):
+    """
+    Test gather_failed_almanack_metric_checks
+    """
+
+    # setup the repo
+    repo_setup(repo_path=tmp_path, files=files)
+
+    # calculate the almanack score and the failed metrics
+    # independent of one another.
+    almanack_score_metrics = compute_almanack_score(
+        almanack_table=(get_table(repo_path=tmp_path))
+    )
+    failed_metrics = gather_failed_almanack_metric_checks(repo_path=tmp_path)
+
+    # calculate the number of expected failures
+    # by subtracting the number of successful metrics
+    # from the total number of metrics calculated
+    # by the almanack score.
+    expected_failures = (
+        almanack_score_metrics["almanack-score-denominator"]
+        - almanack_score_metrics["almanack-score-numerator"]
+    )
+
+    # subtract one from the failed_metrics to account for
+    # the almanack score within the failed metrics.
+    assert expected_failures == len(failed_metrics) - 1
