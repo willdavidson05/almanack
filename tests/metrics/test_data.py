@@ -137,7 +137,7 @@ def test_get_table(repo_files, tmp_path: pathlib.Path) -> None:
     repo_setup(repo_path=repo_path, files=repo_files)
 
     # Create a table from the repo
-    table = get_table(str(repo_path))
+    table = get_table(repo_path=str(repo_path))
 
     # Check table type
     assert isinstance(table, list)
@@ -159,6 +159,19 @@ def test_get_table(repo_files, tmp_path: pathlib.Path) -> None:
             isinstance(record["result"], getattr(builtins, record["result-type"]))
             or record["result"] is None
         ), f"Result {record['result']} is not of type {record['result-type']}."
+
+    # check ignores
+    table_with_ignore = get_table(repo_path=str(repo_path), ignore=["SGA-GL-0002"])
+
+    assert len(table_with_ignore) == len(table) - 1
+
+    # check erroneous ignores (should raise an exception)
+    with pytest.raises(ValueError) as value_exc:
+        get_table(
+            repo_path=str(repo_path), ignore=["SGA-GL-NONEXISTENT", "SGA-GL-0002"]
+        )
+        assert "SGA-GL-NONEXISTENT" in str(value_exc.value)
+        assert "SGA-GL-0002" not in str(value_exc.value)
 
 
 def test_metrics_yaml():
@@ -1107,3 +1120,10 @@ def test_gather_failed_almanack_metric_checks(tmp_path, files):
     # subtract one from the failed_metrics to account for
     # the almanack score within the failed metrics.
     assert expected_failures == len(failed_metrics) - 1
+
+    # check ignores
+    failed_metrics_with_ignore = gather_failed_almanack_metric_checks(
+        repo_path=tmp_path, ignore=["SGA-GL-0025"]
+    )
+
+    assert len(failed_metrics_with_ignore) == len(failed_metrics) - 1
