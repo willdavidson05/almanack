@@ -7,6 +7,7 @@
 
 The Software Gardening Almanack is an open-source handbook of applied guidance and tools for sustainable software development and maintenance.
 The Almanack is available both as a handbook and a Python package.
+The Python package may also be used as a [pre-commit hook to check](#pre-commit-hook) repositories for best practices.
 
 Please see our [pavilion section of the book](https://software-gardening.github.io/almanack/garden-circle/pavilion.html) for presentations and other related materials for the Almanack.
 
@@ -42,6 +43,21 @@ almanack table path/to/repository
 
 # perform linting-style checks on a repository
 almanack check path/to/repository
+```
+
+### Pre-commit Hook
+
+We provide [pre-commit](https://pre-commit.com/) hooks to enable you to run the Almanack as part of your automated checks for developing software projects.
+Add the following to your [`pre-commit-config.yaml`](https://pre-commit.com/#2-add-a-pre-commit-configuration) in order to use the Almanack.
+
+For example:
+
+```yaml
+# include this in your pre-commit-config.yaml
+- repo: https://github.com/software-gardening/almanack
+    rev: v0.1.1
+    hooks:
+    - id: almanack-check
 ```
 
 ### Python API
