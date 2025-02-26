@@ -33,7 +33,7 @@ This commitment requires a good relationship and open communication with our use
 We encourage you to file a [GitHub issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/creating-an-issue) to report bugs or propose enhancements to improve the Software Gardening Almanack.
 
 First, figure out if your idea is already implemented by reading existing issues or pull requests!
-Check the issues (<https://github.com/software-gardening/almanack/issues>) and pull requests (<https://github.com/software-gardening/almanack/pulls>)  to see if someone else has already documented or began implementation of your idea.
+Check the issues (<https://github.com/software-gardening/almanack/issues>) and pull requests (<https://github.com/software-gardening/almanack/pulls>) to see if someone else has already documented or began implementation of your idea.
 If you do find your idea in an existing issue, please comment on the existing issue noting that you are also interested in the functionality.
 If you do not find your idea, please open a new issue and document why it would be helpful for your particular use case.
 
@@ -100,11 +100,11 @@ To enable local development, perform the following steps.
 1. [Install Poetry environment](https://python-poetry.org/docs/basic-usage/#installing-dependencies): `poetry install`
 1. [Install Node](https://nodejs.org/en/download) (suggested: use [`nvm`](https://github.com/nvm-sh/nvm) for managing Node versions)
 1. [Install Node environment](https://docs.npmjs.com/cli/v9/commands/npm-install): `npm install`
-1. [Install Vale dependencies](https://vale.sh/manual/sync/): `poetry run vale sync`
+1. [Install Vale dependencies](https://vale.sh/docs/cli): `poetry run vale sync`
 
 ### Development Tasks
 
-We use [Poe the Poet](https://poethepoet.natn.io/) to define common development tasks, which simplifies repeated  commands.
+We use [Poe the Poet](https://poethepoet.natn.io/) to define common development tasks, which simplifies repeated commands.
 We include Poe the Poet as a Python Poetry `dev` group dependency, which users access through the Poetry environment.
 Please see the [`pyproject.toml`](https://github.com/software-gardening/almanack/blob/main/pyproject.toml) file's `[tool.poe.tasks]` table for a list of available tasks.
 
@@ -147,12 +147,10 @@ We publish source code by using [GitHub Releases](https://docs.github.com/en/rep
 Contents of the book are distributed as both a [website](https://software-gardening.github.io/almanack/) and [PDF](https://software-gardening.github.io/almanack/software-gardening-almanack.pdf).
 We distribute a Python package through the [Python Packaging Index (PyPI)](https://pypi.org/) available [here](https://pypi.org/project/almanack/) which both includes and provides tooling for applying the book's content.
 
-#### Release Publishing Process
-
 Publishing Software Gardening Almanack releases involves several manual and automated steps.
 See below for an overview of how this works.
 
-## Version specifications
+#### Version specifications
 
 We follow [semantic version](https://en.wikipedia.org/wiki/Software_versioning#Semantic_versioning) (semver) specifications with this project through the following technologies.
 
@@ -160,13 +158,24 @@ We follow [semantic version](https://en.wikipedia.org/wiki/Software_versioning#S
 - [GitHub Releases](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) automatically create git tags and source code collections available from the GitHub repository.
 - [`release-drafter`](https://github.com/release-drafter/release-drafter) infers and describes changes since last release within automatically drafted GitHub Releases after pull requests are merged (draft releases are published as decided by maintainers).
 
-### Version specification process
+#### Release process
 
 1. Open a pull request and use a repository label for `release-<semver release type>` to label the pull request for visibility with [`release-drafter`](https://github.com/release-drafter/release-drafter) (for example, see [almanack#43](https://github.com/software-gardening/almanack/pull/43) as a reference of a semver patch update).
 1. On merging the pull request for the release, a [GitHub Actions workflow](https://docs.github.com/en/actions/using-workflows) defined in `draft-release.yml` leveraging [`release-drafter`](https://github.com/release-drafter/release-drafter) will draft a release for maintainers.
 1. The draft GitHub release will include a version tag based on the GitHub PR label applied and `release-drafter`.
 1. Make modifications as necessary to the draft GitHub release, then publish the release (the draft release does not normally need additional modifications).
 1. On publishing the release, another GitHub Actions workflow defined in `publish-pypi.yml` will automatically build and deploy the Python package to PyPI (utilizing the earlier modified `pyproject.toml` semantic version reference for labeling the release).
+1. Each GitHub release will trigger a [Zenodo GitHub integration](https://docs.github.com/en/repositories/archiving-a-github-repository/referencing-and-citing-content#issuing-a-persistent-identifier-for-your-repository-with-zenodo) which creates a new Zenodo record and unique DOI.
+
+## Citations
+
+We create a unique DOI per release through the [Zenodo GitHub integration](https://docs.github.com/en/repositories/archiving-a-github-repository/referencing-and-citing-content#issuing-a-persistent-identifier-for-your-repository-with-zenodo).
+As part of this we also use a special DOI provided from Zenodo to reference the latest record on each new release.
+Zenodo outlines how this works within their [versioning documentation](https://zenodo.org/help/versioning).
+
+The DOI and other citation metadata are stored within a [`CITATION.cff` file](https://github.com/citation-file-format/citation-file-format).
+Our `CITATION.cff` is the primary source of citation information in correspondence with this project.
+The `CITATION.cff` file is used within a sidebar [integration through the GitHub web interface](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-citation-files) to enable people to directly cite this project.
 
 ## Attribution
 

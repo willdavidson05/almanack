@@ -175,21 +175,27 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../introduction.html">
-                    Welcome
+                    Introduction
                 </a>
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../garden-lattice/garden-lattice.html">Garden Lattice</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../software-forest/software-forest.html">Software Forest</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../verdant-sundial/verdant-sundial.html">Verdant Sundial</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../seed-bank/seed-bank.html">Seed Bank</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../garden-lattice/garden-lattice.html">1. Garden Lattice</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../garden-lattice/understanding.html">Understanding</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../software-forest/software-forest.html">2. Software Forest</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../verdant-sundial/verdant-sundial.html">3. Verdant Sundial</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../seed-bank/seed-bank.html">Seed Bank</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../seed-bank/almanack-example/almanack-example.html">Software Gardening Almanack Package Example Use</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../seed-bank/pubmed-github-repositories/visualize-pubmed-repo-sofware-entropy.html">PubMed GitHub Repository Software Information Entropy</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="garden-circle.html">Garden Circle</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="garden-circle.html">Garden Circle</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Contributing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="garden-map.html">Garden Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pavilion.html">Pavilion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="package-api.html">Almanack Package API</a></li>
 </ul>
 </li>
 </ul>
@@ -404,15 +410,13 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linting">Linting</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-ci-cd-with-github-actions">Automated CI/CD with GitHub Actions</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#releases">Releases</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#release-publishing-process">Release Publishing Process</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#version-specifications">Version specifications</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#release-process">Release process</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-specifications">Version specifications</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#version-specification-process">Version specification process</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attribution">Attribution</a></li>
 </ul>
             </nav>
@@ -457,7 +461,7 @@ Please report unacceptable behavior by following the procedures listed under the
 This commitment requires a good relationship and open communication with our users.</p>
 <p>We encourage you to file a <a class="reference external" href="https://docs.github.com/en/issues/tracking-your-work-with-issues/creating-an-issue">GitHub issue</a> to report bugs or propose enhancements to improve the Software Gardening Almanack.</p>
 <p>First, figure out if your idea is already implemented by reading existing issues or pull requests!
-Check the issues (<a class="github reference external" href="https://github.com/software-gardening/almanack/issues">software-gardening/almanack#issues</a>) and pull requests (<a class="github reference external" href="https://github.com/software-gardening/almanack/pulls">software-gardening/almanack</a>)  to see if someone else has already documented or began implementation of your idea.
+Check the issues (<a class="github reference external" href="https://github.com/software-gardening/almanack/issues">software-gardening/almanack#issues</a>) and pull requests (<a class="github reference external" href="https://github.com/software-gardening/almanack/pulls">software-gardening/almanack</a>) to see if someone else has already documented or began implementation of your idea.
 If you do find your idea in an existing issue, please comment on the existing issue noting that you are also interested in the functionality.
 If you do not find your idea, please open a new issue and document why it would be helpful for your particular use case.</p>
 <p>Please also provide the following specifics:</p>
@@ -522,12 +526,12 @@ We use <a class="reference external" href="https://docs.github.com/en/actions">G
 <li><p><a class="reference external" href="https://python-poetry.org/docs/basic-usage/#installing-dependencies">Install Poetry environment</a>: <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">install</span></code></p></li>
 <li><p><a class="reference external" href="https://nodejs.org/en/download">Install Node</a> (suggested: use <a class="reference external" href="https://github.com/nvm-sh/nvm"><code class="docutils literal notranslate"><span class="pre">nvm</span></code></a> for managing Node versions)</p></li>
 <li><p><a class="reference external" href="https://docs.npmjs.com/cli/v9/commands/npm-install">Install Node environment</a>: <code class="docutils literal notranslate"><span class="pre">npm</span> <span class="pre">install</span></code></p></li>
-<li><p><a class="reference external" href="https://vale.sh/manual/sync/">Install Vale dependencies</a>: <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span> <span class="pre">vale</span> <span class="pre">sync</span></code></p></li>
+<li><p><a class="reference external" href="https://vale.sh/docs/cli">Install Vale dependencies</a>: <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span> <span class="pre">vale</span> <span class="pre">sync</span></code></p></li>
 </ol>
 </section>
 <section id="development-tasks">
 <h3>Development Tasks<a class="headerlink" href="#development-tasks" title="Link to this heading">#</a></h3>
-<p>We use <a class="reference external" href="https://poethepoet.natn.io/">Poe the Poet</a> to define common development tasks, which simplifies repeated  commands.
+<p>We use <a class="reference external" href="https://poethepoet.natn.io/">Poe the Poet</a> to define common development tasks, which simplifies repeated commands.
 We include Poe the Poet as a Python Poetry <code class="docutils literal notranslate"><span class="pre">dev</span></code> group dependency, which users access through the Poetry environment.
 Please see the <a class="reference external" href="https://github.com/software-gardening/almanack/blob/main/pyproject.toml"><code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code></a> file’s <code class="docutils literal notranslate"><span class="pre">[tool.poe.tasks]</span></code> table for a list of available tasks.</p>
 <p>For example:</p>
@@ -565,31 +569,38 @@ We suggest the use of <a class="reference external" href="https://github.com/nek
 We publish source code by using <a class="reference external" href="https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases">GitHub Releases</a> available <a class="reference external" href="https://github.com/software-gardening/almanack/releases">here</a>.
 Contents of the book are distributed as both a <a class="reference external" href="https://software-gardening.github.io/almanack/">website</a> and <a class="reference external" href="https://software-gardening.github.io/almanack/software-gardening-almanack.pdf">PDF</a>.
 We distribute a Python package through the <a class="reference external" href="https://pypi.org/">Python Packaging Index (PyPI)</a> available <a class="reference external" href="https://pypi.org/project/almanack/">here</a> which both includes and provides tooling for applying the book’s content.</p>
-<section id="release-publishing-process">
-<h4>Release Publishing Process<a class="headerlink" href="#release-publishing-process" title="Link to this heading">#</a></h4>
 <p>Publishing Software Gardening Almanack releases involves several manual and automated steps.
 See below for an overview of how this works.</p>
-</section>
-</section>
-</section>
 <section id="version-specifications">
-<h2>Version specifications<a class="headerlink" href="#version-specifications" title="Link to this heading">#</a></h2>
+<h4>Version specifications<a class="headerlink" href="#version-specifications" title="Link to this heading">#</a></h4>
 <p>We follow <a class="reference external" href="https://en.wikipedia.org/wiki/Software_versioning#Semantic_versioning">semantic version</a> (semver) specifications with this project through the following technologies.</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/mtkennerly/poetry-dynamic-versioning"><code class="docutils literal notranslate"><span class="pre">poetry-dynamic-versioning</span></code></a> leveraging <a class="reference external" href="https://github.com/mtkennerly/dunamai"><code class="docutils literal notranslate"><span class="pre">dunamai</span></code></a> creates version data based on <a class="reference external" href="https://git-scm.com/book/en/v2/Git-Basics-Tagging">git tags</a> and commits.</p></li>
 <li><p><a class="reference external" href="https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases">GitHub Releases</a> automatically create git tags and source code collections available from the GitHub repository.</p></li>
 <li><p><a class="reference external" href="https://github.com/release-drafter/release-drafter"><code class="docutils literal notranslate"><span class="pre">release-drafter</span></code></a> infers and describes changes since last release within automatically drafted GitHub Releases after pull requests are merged (draft releases are published as decided by maintainers).</p></li>
 </ul>
-<section id="version-specification-process">
-<h3>Version specification process<a class="headerlink" href="#version-specification-process" title="Link to this heading">#</a></h3>
+</section>
+<section id="release-process">
+<h4>Release process<a class="headerlink" href="#release-process" title="Link to this heading">#</a></h4>
 <ol class="arabic simple">
 <li><p>Open a pull request and use a repository label for <code class="docutils literal notranslate"><span class="pre">release-&lt;semver</span> <span class="pre">release</span> <span class="pre">type&gt;</span></code> to label the pull request for visibility with <a class="reference external" href="https://github.com/release-drafter/release-drafter"><code class="docutils literal notranslate"><span class="pre">release-drafter</span></code></a> (for example, see <a class="reference external" href="https://github.com/software-gardening/almanack/pull/43">almanack#43</a> as a reference of a semver patch update).</p></li>
 <li><p>On merging the pull request for the release, a <a class="reference external" href="https://docs.github.com/en/actions/using-workflows">GitHub Actions workflow</a> defined in <code class="docutils literal notranslate"><span class="pre">draft-release.yml</span></code> leveraging <a class="reference external" href="https://github.com/release-drafter/release-drafter"><code class="docutils literal notranslate"><span class="pre">release-drafter</span></code></a> will draft a release for maintainers.</p></li>
 <li><p>The draft GitHub release will include a version tag based on the GitHub PR label applied and <code class="docutils literal notranslate"><span class="pre">release-drafter</span></code>.</p></li>
 <li><p>Make modifications as necessary to the draft GitHub release, then publish the release (the draft release does not normally need additional modifications).</p></li>
 <li><p>On publishing the release, another GitHub Actions workflow defined in <code class="docutils literal notranslate"><span class="pre">publish-pypi.yml</span></code> will automatically build and deploy the Python package to PyPI (utilizing the earlier modified <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> semantic version reference for labeling the release).</p></li>
+<li><p>Each GitHub release will trigger a <a class="reference external" href="https://docs.github.com/en/repositories/archiving-a-github-repository/referencing-and-citing-content#issuing-a-persistent-identifier-for-your-repository-with-zenodo">Zenodo GitHub integration</a> which creates a new Zenodo record and unique DOI.</p></li>
 </ol>
 </section>
+</section>
+</section>
+<section id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Link to this heading">#</a></h2>
+<p>We create a unique DOI per release through the <a class="reference external" href="https://docs.github.com/en/repositories/archiving-a-github-repository/referencing-and-citing-content#issuing-a-persistent-identifier-for-your-repository-with-zenodo">Zenodo GitHub integration</a>.
+As part of this we also use a special DOI provided from Zenodo to reference the latest record on each new release.
+Zenodo outlines how this works within their <a class="reference external" href="https://zenodo.org/help/versioning">versioning documentation</a>.</p>
+<p>The DOI and other citation metadata are stored within a <a class="reference external" href="https://github.com/citation-file-format/citation-file-format"><code class="docutils literal notranslate"><span class="pre">CITATION.cff</span></code> file</a>.
+Our <code class="docutils literal notranslate"><span class="pre">CITATION.cff</span></code> is the primary source of citation information in correspondence with this project.
+The <code class="docutils literal notranslate"><span class="pre">CITATION.cff</span></code> file is used within a sidebar <a class="reference external" href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-citation-files">integration through the GitHub web interface</a> to enable people to directly cite this project.</p>
 </section>
 <section id="attribution">
 <h2>Attribution<a class="headerlink" href="#attribution" title="Link to this heading">#</a></h2>
@@ -679,15 +690,13 @@ Big thanks go to the developers and contributors of that repository.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linting">Linting</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-ci-cd-with-github-actions">Automated CI/CD with GitHub Actions</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#releases">Releases</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#release-publishing-process">Release Publishing Process</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#version-specifications">Version specifications</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#release-process">Release process</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-specifications">Version specifications</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#version-specification-process">Version specification process</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attribution">Attribution</a></li>
 </ul>
   </nav></div>
