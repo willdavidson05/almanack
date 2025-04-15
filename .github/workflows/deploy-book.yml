@@ -19,6 +19,9 @@ jobs:
           fetch-depth: 0
       - name: Install python env
         uses: ./.github/actions/install-python-env
+      - name: Install playwright chromium
+        run: |
+          poetry run playwright install --with-deps chromium
       - name: Build the jupyter book content
         run: |
           poetry run poe build-book
