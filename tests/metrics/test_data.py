@@ -4,7 +4,7 @@ Testing metrics/data functionality
 
 import builtins
 import pathlib
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from typing import Dict, List, Union
 
 import dunamai
@@ -136,6 +136,17 @@ def test_generate_repo_data(entropy_repository_paths: dict[str, pathlib.Path]) -
                 "tag": "atag",
             },
         ],
+        [
+            {
+                "files": {
+                    "readme.rst": "Read me",
+                    # test example of real DOI from Pycytominer paper
+                    "CITATION.cff": "doi: 10.1038/s41592-025-02611-8",
+                },
+                "commit-date": datetime(2024, 8, 1),
+                "author": {"name": "author", "email": "author@example3.edu"},
+            },
+        ],
     ],
 )
 def test_get_table(repo_files, tmp_path: pathlib.Path) -> None:
@@ -169,7 +180,7 @@ def test_get_table(repo_files, tmp_path: pathlib.Path) -> None:
         assert (
             isinstance(record["result"], getattr(builtins, record["result-type"]))
             or record["result"] is None
-        ), f"Result {record['result']} is not of type {record['result-type']}."
+        ), f"Result from {record['name']} as value {record['result']} is not of type {record['result-type']}."
 
     # check ignores
     table_with_ignore = get_table(repo_path=str(repo_path), ignore=["SGA-GL-0002"])
@@ -866,7 +877,7 @@ def test_get_ecosystems_package_metrics():
                 "doi": "10.48550/arXiv.2311.13417",
                 "valid_format_doi": True,
                 "https_resolvable_doi": True,
-                "publication_date": datetime(2023, 1, 1, 0, 0),
+                "publication_date": date(2023, 1, 1),
                 "cited_by_count": 4,
             },
         ),
@@ -886,7 +897,7 @@ def test_get_ecosystems_package_metrics():
                 "doi": "10.1186/s44330-024-00014-3",
                 "valid_format_doi": True,
                 "https_resolvable_doi": True,
-                "publication_date": datetime(2024, 12, 8, 0, 0),
+                "publication_date": date(2024, 12, 8),
                 "cited_by_count": 0,
             },
         ),
