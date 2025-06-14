@@ -38,7 +38,11 @@ class AlmanackCLI(object):
     """
 
     def table(
-        self, repo_path: str, ignore: Optional[List[str]] = None, verbose: bool = False
+        self,
+        repo_path: str,
+        dest_path: Optional[str] = None,
+        ignore: Optional[List[str]] = None,
+        verbose: bool = False,
     ) -> None:
         """
         Used through CLI to
@@ -50,6 +54,8 @@ class AlmanackCLI(object):
         Args:
             repo_path (str):
                 The path to the repository to analyze.
+            dest_path (str):
+                A path to send the output to.
             ignore (List[str]):
                 A list of metric IDs to ignore when
                 running the checks. Defaults to None.
@@ -60,13 +66,21 @@ class AlmanackCLI(object):
         if verbose:
             print(f"Gathering table for repo: {repo_path} (ignore={ignore})")
 
-        # print serialized JSON as a string
-        print(
-            json.dumps(
-                # gather table data from Almanack
-                get_table(repo_path=repo_path, ignore=ignore),
-            )
+        # serialized JSON as a string
+        json_output = json.dumps(
+            # gather table data from Almanack
+            get_table(repo_path=repo_path, ignore=ignore),
         )
+
+        # if we have a dest_path, send data to file
+        if dest_path is not None:
+            with open(dest_path, "w") as f:
+                f.write(json_output)
+            print(f"Wrote data to file: {dest_path}")
+
+        # otherwise use stdout
+        else:
+            print(json_output)
 
         # exit with zero status for no errors
         # (we don't check for failures with this
