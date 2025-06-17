@@ -97,13 +97,18 @@ def test_cli_almanack_check(tmp_path):
     # check that we see the following strings within the output
     assert all(
         check_str in stdout
+        # We check for generalized strings within the output below.
+        # Note: actual text may vary - the text here is mostly about
+        # ensuring the output was roughly provided without
+        # so much precision that we have to adjust these strings
+        # with each minor change.
         for check_str in [
             "Running Software Gardening Almanack checks.",
             "Datetime:",
             "Almanack version:",
             "Target repository path:",
-            "The following Software Gardening Almanack metrics have failed:",
-            "Software Gardening Almanack score:",
+            "The following Software Gardening Almanack metrics",
+            "Software Gardening Almanack summary:",
         ]
     )
 
