@@ -33,8 +33,8 @@
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=8a490771" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=3fce4d98" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
@@ -52,7 +52,7 @@
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
@@ -190,7 +190,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../seed-bank/pubmed-github-repositories/visualize-pubmed-repo-sofware-entropy.html">PubMed GitHub Repository Software Information Entropy</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../garden-circle/garden-circle.html">Garden Circle</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../checks/index.html">Checks Index</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../garden-circle/garden-circle.html">Garden Circle</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../garden-circle/contributing.html">Contributing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../garden-circle/garden-map.html">Garden Map</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../garden-circle/pavilion.html">Pavilion</a></li>
@@ -367,6 +370,35 @@ document.write(`
 <span class="p">)</span>
 
 
+<div class="viewcode-block" id="cli_link">
+<a class="viewcode-back" href="../../garden-circle/package-api.html#almanack.cli.cli_link">[docs]</a>
+<span class="k">def</span> <span class="nf">cli_link</span><span class="p">(</span><span class="n">uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a CLI-based link for a given URI.</span>
+
+<span class="sd">    Referenced with modifications from:</span>
+<span class="sd">    https://stackoverflow.com/a/71309268</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        uri (str):</span>
+<span class="sd">            The URI to link to.</span>
+<span class="sd">        label (str, optional):</span>
+<span class="sd">            The label for the link. Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str:</span>
+<span class="sd">            An OSC 8 escape sequence for the link.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># if we have no label, use the URI as the label</span>
+    <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">uri</span>
+
+    <span class="c1"># formatted string with order:</span>
+    <span class="c1"># OSC 8 ; params ; URI ST &lt;name&gt; OSC 8 ;; ST</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">]8;</span><span class="si">{</span><span class="n">parameters</span><span class="si">}</span><span class="s2">;</span><span class="si">{</span><span class="n">uri</span><span class="si">}</span><span class="se">\033\\</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="se">\033</span><span class="s2">]8;;</span><span class="se">\033\\</span><span class="s2">&quot;</span></div>
+
+
+
 <div class="viewcode-block" id="AlmanackCLI">
 <a class="viewcode-back" href="../../garden-circle/package-api.html#almanack.cli.AlmanackCLI">[docs]</a>
 <span class="k">class</span> <span class="nc">AlmanackCLI</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -390,7 +422,13 @@ document.write(`
 
 <div class="viewcode-block" id="AlmanackCLI.table">
 <a class="viewcode-back" href="../../garden-circle/package-api.html#almanack.cli.AlmanackCLI.table">[docs]</a>
-    <span class="k">def</span> <span class="nf">table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repo_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ignore</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">table</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">repo_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">dest_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ignore</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Used through CLI to</span>
 <span class="sd">        generate a table of metrics</span>
@@ -401,18 +439,35 @@ document.write(`
 <span class="sd">        Args:</span>
 <span class="sd">            repo_path (str):</span>
 <span class="sd">                The path to the repository to analyze.</span>
+<span class="sd">            dest_path (str):</span>
+<span class="sd">                A path to send the output to.</span>
 <span class="sd">            ignore (List[str]):</span>
 <span class="sd">                A list of metric IDs to ignore when</span>
 <span class="sd">                running the checks. Defaults to None.</span>
+<span class="sd">             verbose (bool):</span>
+<span class="sd">                If True, print extra information.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c1"># print serialized JSON as a string</span>
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
-                <span class="c1"># gather table data from Almanack</span>
-                <span class="n">get_table</span><span class="p">(</span><span class="n">repo_path</span><span class="o">=</span><span class="n">repo_path</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="n">ignore</span><span class="p">),</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>  <span class="c1"># noqa: T201</span>
+                <span class="sa">f</span><span class="s2">&quot;Gathering table for repo: </span><span class="si">{</span><span class="n">repo_path</span><span class="si">}</span><span class="s2"> (ignore=</span><span class="si">{</span><span class="n">ignore</span><span class="si">}</span><span class="s2">)&quot;</span>
             <span class="p">)</span>
+
+        <span class="c1"># serialized JSON as a string</span>
+        <span class="n">json_output</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+            <span class="c1"># gather table data from Almanack</span>
+            <span class="n">get_table</span><span class="p">(</span><span class="n">repo_path</span><span class="o">=</span><span class="n">repo_path</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="n">ignore</span><span class="p">),</span>
         <span class="p">)</span>
+
+        <span class="c1"># if we have a dest_path, send data to file</span>
+        <span class="k">if</span> <span class="n">dest_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dest_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_output</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wrote data to file: </span><span class="si">{</span><span class="n">dest_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># noqa: T201</span>
+
+        <span class="c1"># otherwise use stdout</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">json_output</span><span class="p">)</span>  <span class="c1"># noqa: T201</span>
 
         <span class="c1"># exit with zero status for no errors</span>
         <span class="c1"># (we don&#39;t check for failures with this</span>
@@ -422,7 +477,9 @@ document.write(`
 
 <div class="viewcode-block" id="AlmanackCLI.check">
 <a class="viewcode-back" href="../../garden-circle/package-api.html#almanack.cli.AlmanackCLI.check">[docs]</a>
-    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repo_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ignore</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">repo_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ignore</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Used through CLI to</span>
 <span class="sd">        check table of metrics for</span>
@@ -443,13 +500,16 @@ document.write(`
 
         <span class="c1"># header for CLI output</span>
         <span class="n">datetime_now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S.</span><span class="si">%f</span><span class="s2">Z&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span>
+        <span class="nb">print</span><span class="p">(</span>  <span class="c1"># noqa: T201</span>
             <span class="s2">&quot;Running Software Gardening Almanack checks.&quot;</span><span class="p">,</span>
             <span class="sa">f</span><span class="s2">&quot;Datetime: </span><span class="si">{</span><span class="n">datetime_now</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="sa">f</span><span class="s2">&quot;Almanack version: </span><span class="si">{</span><span class="n">_get_almanack_version</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="sa">f</span><span class="s2">&quot;Target repository path: </span><span class="si">{</span><span class="n">repo_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running check on repo: </span><span class="si">{</span><span class="n">repo_path</span><span class="si">}</span><span class="s2"> (ignore=</span><span class="si">{</span><span class="n">ignore</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>  <span class="c1"># noqa: T201</span>
 
         <span class="c1"># gather failed metrics</span>
         <span class="n">failed_metrics</span> <span class="o">=</span> <span class="n">gather_failed_almanack_metric_checks</span><span class="p">(</span>
@@ -468,7 +528,7 @@ document.write(`
 
         <span class="c1"># prepare almanack score output</span>
         <span class="n">almanack_score_output</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Software Gardening Almanack score: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">almanack_score_metrics</span><span class="p">[</span><span class="s1">&#39;almanack-score&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">% &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Software Gardening Almanack summary: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">almanack_score_metrics</span><span class="p">[</span><span class="s1">&#39;almanack-score&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">% &quot;</span>
             <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">almanack_score_metrics</span><span class="p">[</span><span class="s1">&#39;almanack-score-numerator&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">almanack_score_metrics</span><span class="p">[</span><span class="s1">&#39;almanack-score-denominator&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
         <span class="p">)</span>
@@ -479,11 +539,21 @@ document.write(`
         <span class="k">if</span> <span class="n">almanack_score_metrics</span><span class="p">[</span><span class="s2">&quot;almanack-score&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
 
             <span class="c1"># introduce a table of output in CLI</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The following Software Gardening Almanack metrics have failed:&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>  <span class="c1"># noqa: T201</span>
+                <span class="s2">&quot;The following Software Gardening Almanack metrics may be helpful to improve your repository:&quot;</span>
+            <span class="p">)</span>
 
             <span class="c1"># Format the output</span>
             <span class="n">failures_output_table</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="p">[</span><span class="n">metric</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">metric</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">metric</span><span class="p">[</span><span class="s2">&quot;correction_guidance&quot;</span><span class="p">]]</span>
+                <span class="p">[</span>
+                    <span class="n">metric</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span>
+                    <span class="n">metric</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+                    <span class="n">metric</span><span class="p">[</span><span class="s2">&quot;correction_guidance&quot;</span><span class="p">],</span>
+                    <span class="n">cli_link</span><span class="p">(</span>
+                        <span class="n">uri</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;https://software-gardening.github.io/almanack/checks/</span><span class="si">{</span><span class="n">metric</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.html&quot;</span><span class="p">,</span>
+                        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;link&quot;</span><span class="p">,</span>
+                    <span class="p">),</span>
+                <span class="p">]</span>
                 <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">failed_metrics</span>
                 <span class="k">if</span> <span class="n">metric</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;repo-almanack-score&quot;</span>
             <span class="p">]</span>
@@ -492,12 +562,17 @@ document.write(`
             <span class="n">max_id_length</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">failures_output_table</span><span class="p">)</span>
             <span class="n">max_name_length</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">metric</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">failures_output_table</span><span class="p">)</span>
 
+            <span class="c1"># calculate the max width for the guidance column in output</span>
+            <span class="n">max_width</span> <span class="o">=</span> <span class="p">(</span><span class="n">shutil</span><span class="o">.</span><span class="n">get_terminal_size</span><span class="p">()</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span>
+                <span class="n">max_id_length</span> <span class="o">+</span> <span class="n">max_name_length</span> <span class="o">+</span> <span class="mi">25</span>
+            <span class="p">)</span>
+
             <span class="c1"># show a table of failures</span>
-            <span class="nb">print</span><span class="p">(</span>
+            <span class="nb">print</span><span class="p">(</span>  <span class="c1"># noqa: T201</span>
                 <span class="nb">str</span><span class="p">(</span>
                     <span class="n">tabulate</span><span class="p">(</span>
-                        <span class="n">failures_output_table</span><span class="p">,</span>
-                        <span class="p">[</span><span class="s2">&quot;ID&quot;</span><span class="p">,</span> <span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Guidance&quot;</span><span class="p">],</span>
+                        <span class="n">tabular_data</span><span class="o">=</span><span class="n">failures_output_table</span><span class="p">,</span>
+                        <span class="n">headers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ID&quot;</span><span class="p">,</span> <span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Guidance&quot;</span><span class="p">,</span> <span class="s2">&quot;More Info&quot;</span><span class="p">],</span>
                         <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;rounded_grid&quot;</span><span class="p">,</span>
                         <span class="c1"># set a dynamic width for each column in the table</span>
                         <span class="c1"># where the None is no max width and the final column</span>
@@ -506,21 +581,21 @@ document.write(`
                         <span class="n">maxcolwidths</span><span class="o">=</span><span class="p">[</span>
                             <span class="kc">None</span><span class="p">,</span>
                             <span class="kc">None</span><span class="p">,</span>
-                            <span class="p">(</span><span class="n">shutil</span><span class="o">.</span><span class="n">get_terminal_size</span><span class="p">()</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-                            <span class="o">-</span> <span class="p">(</span><span class="n">max_id_length</span> <span class="o">+</span> <span class="n">max_name_length</span> <span class="o">+</span> <span class="mi">12</span><span class="p">),</span>
+                            <span class="n">max_width</span> <span class="k">if</span> <span class="n">max_width</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">30</span><span class="p">,</span>
+                            <span class="kc">None</span><span class="p">,</span>
                         <span class="p">],</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
             <span class="p">)</span>
 
             <span class="c1"># show the almanack score output</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">almanack_score_output</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">almanack_score_output</span><span class="p">)</span>  <span class="c1"># noqa: T201</span>
 
             <span class="c1"># return non-zero exit code for failures</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
         <span class="c1"># show the almanack score output</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">almanack_score_output</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">almanack_score_output</span><span class="p">)</span>  <span class="c1"># noqa: T201</span>
 
         <span class="c1"># exit with zero (no failures)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>

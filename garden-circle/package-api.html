@@ -34,8 +34,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=8a490771" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=3fce4d98" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
@@ -53,7 +53,7 @@
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
@@ -190,7 +190,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../seed-bank/pubmed-github-repositories/visualize-pubmed-repo-sofware-entropy.html">PubMed GitHub Repository Software Information Entropy</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="garden-circle.html">Garden Circle</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../checks/index.html">Checks Index</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="garden-circle.html">Garden Circle</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="garden-map.html">Garden Map</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pavilion.html">Pavilion</a></li>
@@ -399,6 +402,7 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#almanack.cli.AlmanackCLI.table"><code class="docutils literal notranslate"><span class="pre">AlmanackCLI.table()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#almanack.cli.cli_link"><code class="docutils literal notranslate"><span class="pre">cli_link()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#almanack.cli.trigger"><code class="docutils literal notranslate"><span class="pre">trigger()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#almanack.git.clone_repository"><code class="docutils literal notranslate"><span class="pre">clone_repository()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#almanack.git.count_files"><code class="docutils literal notranslate"><span class="pre">count_files()</span></code></a></li>
@@ -535,7 +539,7 @@ otherwise 0.</p>
 </ul>
 <dl class="py method">
 <dt class="sig sig-object py" id="almanack.cli.AlmanackCLI.check">
-<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/almanack/cli.html#AlmanackCLI.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#almanack.cli.AlmanackCLI.check" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/almanack/cli.html#AlmanackCLI.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#almanack.cli.AlmanackCLI.check" title="Link to this definition">#</a></dt>
 <dd><p>Used through CLI to
 check table of metrics for
 boolean values with a non-zero
@@ -556,7 +560,7 @@ running the checks. Defaults to None.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="almanack.cli.AlmanackCLI.table">
-<span class="sig-name descname"><span class="pre">table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/almanack/cli.html#AlmanackCLI.table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#almanack.cli.AlmanackCLI.table" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/almanack/cli.html#AlmanackCLI.table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#almanack.cli.AlmanackCLI.table" title="Link to this definition">#</a></dt>
 <dd><p>Used through CLI to
 generate a table of metrics</p>
 <p>This enables the use of CLI such as:
@@ -565,13 +569,41 @@ generate a table of metrics</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>repo_path</strong> (<em>str</em>) – The path to the repository to analyze.</p></li>
-<li><p><strong>ignore</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list of metric IDs to ignore when
-running the checks. Defaults to None.</p></li>
+<li><p><strong>dest_path</strong> (<em>str</em>) – A path to send the output to.</p></li>
+<li><p><strong>ignore</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – <dl class="simple">
+<dt>A list of metric IDs to ignore when</dt><dd><p>running the checks. Defaults to None.</p>
+</dd>
+<dt>verbose (bool):</dt><dd><p>If True, print extra information.</p>
+</dd>
+</dl>
+</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="almanack.cli.cli_link">
+<span class="sig-prename descclassname"><span class="pre">almanack.cli.</span></span><span class="sig-name descname"><span class="pre">cli_link</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/almanack/cli.html#cli_link"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#almanack.cli.cli_link" title="Link to this definition">#</a></dt>
+<dd><p>Create a CLI-based link for a given URI.</p>
+<p>Referenced with modifications from:
+<a class="reference external" href="https://stackoverflow.com/a/71309268">https://stackoverflow.com/a/71309268</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uri</strong> (<em>str</em>) – The URI to link to.</p></li>
+<li><p><strong>label</strong> (<em>str</em><em>, </em><em>optional</em>) – The label for the link. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An OSC 8 escape sequence for the link.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -768,7 +800,11 @@ or None if no matching file is found.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="almanack.git.get_remote_url">
 <span class="sig-prename descclassname"><span class="pre">almanack.git.</span></span><span class="sig-name descname"><span class="pre">get_remote_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Repository</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/almanack/git.html#get_remote_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#almanack.git.get_remote_url" title="Link to this definition">#</a></dt>
-<dd><p>Determines the remote URL of a git repository, if available.</p>
+<dd><p>Determines the remote URL of a git repository, if available.
+We use the <cite>upstream</cite> remote first, then <cite>origin</cite>,
+and finally any other remote.
+The upstream remote is preferred because it will be used
+for referential data lookups (such as GitHub issues, stars, etc.).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>repo</strong> (<em>pygit2.Repository</em>) – The pygit2 repository object.</p>
@@ -1510,6 +1546,7 @@ related to the repository.</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#almanack.cli.AlmanackCLI.table"><code class="docutils literal notranslate"><span class="pre">AlmanackCLI.table()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#almanack.cli.cli_link"><code class="docutils literal notranslate"><span class="pre">cli_link()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#almanack.cli.trigger"><code class="docutils literal notranslate"><span class="pre">trigger()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#almanack.git.clone_repository"><code class="docutils literal notranslate"><span class="pre">clone_repository()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#almanack.git.count_files"><code class="docutils literal notranslate"><span class="pre">count_files()</span></code></a></li>

@@ -33,8 +33,8 @@
     <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=8a490771" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=3fce4d98" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
@@ -52,7 +52,7 @@
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../../../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../../../../_static/design-tabs.js?v=36754332"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="../../../../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
@@ -190,7 +190,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../seed-bank/pubmed-github-repositories/visualize-pubmed-repo-sofware-entropy.html">PubMed GitHub Repository Software Information Entropy</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../garden-circle/garden-circle.html">Garden Circle</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../checks/index.html">Checks Index</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../garden-circle/garden-circle.html">Garden Circle</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../garden-circle/contributing.html">Contributing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../garden-circle/garden-map.html">Garden Map</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../garden-circle/pavilion.html">Pavilion</a></li>
@@ -385,7 +388,7 @@ document.write(`
     <span class="c1"># Generate and print the report from the dictionary</span>
     <span class="n">report_content</span> <span class="o">=</span> <span class="n">repo_report</span><span class="p">(</span><span class="n">entropy_data</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="n">report_content</span><span class="p">)</span></div>
+    <span class="nb">print</span><span class="p">(</span><span class="n">report_content</span><span class="p">)</span>  <span class="c1"># noqa: T201</span></div>
 
 
 
@@ -419,7 +422,7 @@ document.write(`
     <span class="c1"># Generate and print the report</span>
     <span class="n">report_content</span> <span class="o">=</span> <span class="n">pr_report</span><span class="p">(</span><span class="n">pr_data</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="n">report_content</span><span class="p">)</span></div>
+    <span class="nb">print</span><span class="p">(</span><span class="n">report_content</span><span class="p">)</span>  <span class="c1"># noqa: T201</span></div>
 
 </pre></div>
 
