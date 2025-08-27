@@ -132,7 +132,7 @@ metrics:
       If the work referenced by the repository DOI has been retracted.
     correction_guidance:
     fix_why:
-    fixhow:
+    fix_how:
   - name: repo-doi-grants-count
     id: "SGA-META-0015"
     result-type: int
