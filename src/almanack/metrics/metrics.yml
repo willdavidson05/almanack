@@ -121,7 +121,7 @@ metrics:
     description: >-
       Field-Weighted Citation Impact (FWCI) from OpenAlex for the work
       referenced by the repository DOI.
-    correction_guidance: 
+    correction_guidance:
     fix_why:
     fix_how:
   - name: repo-doi-is-not-retracted
@@ -148,7 +148,7 @@ metrics:
     sustainability_correlation: 0
     description: >-
       List of grant records for the DOI's work
-    correction_guidance: 
+    correction_guidance:
     fix_why:
     fix_how:
   - name: "repo-almanack-score"
