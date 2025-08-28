@@ -199,7 +199,7 @@ def find_doi_citation_data(repo: pygit2.Repository) -> Dict[str, Any]:
         "publication_date": None,
         "cited_by_count": None,
         "fwci": None,
-        "is_retracted": None,
+        "is_not_retracted": None,
         "grants": None,
         "grants_count": None,
     }
@@ -273,7 +273,11 @@ def find_doi_citation_data(repo: pygit2.Repository) -> Dict[str, Any]:
                         ),
                         "cited_by_count": openalex_result.get("cited_by_count", None),
                         "fwci": openalex_result.get("fwci", None),
-                        "is_retracted": openalex_result.get("is_retracted", None),
+                        "is_not_retracted": (
+                            None
+                            if openalex_result.get("is_retracted") is None
+                            else not openalex_result["is_retracted"]
+                        ),
                         "grants": openalex_result.get("grants", None),
                         "grants_count": (
                             len(openalex_result["grants"])
