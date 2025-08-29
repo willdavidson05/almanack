@@ -127,7 +127,7 @@ metrics:
   - name: repo-doi-is-not-retracted
     id: "SGA-META-0014"
     result-type: bool
-    sustainability_correlation: 1
+    sustainability_correlation: 0
     description: >-
       If the work referenced by the repository DOI has been retracted.
     correction_guidance:
